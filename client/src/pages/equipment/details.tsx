@@ -27,7 +27,6 @@ export default function EquipmentDetails() {
     );
   }
 
-  // Hiển thị thông báo lỗi nếu có
   if (error) {
     return (
       <div className="space-y-6">
@@ -71,6 +70,12 @@ export default function EquipmentDetails() {
   // Lấy tên phòng ban
   const department = departments?.find(d => d.id === equipment.departmentId);
 
+  // Kiểm tra xem có thể yêu cầu bảo trì không
+  const canRequestMaintenance = equipment.status === "Active";
+  const maintenanceStatus = equipment.status === "PendingMaintenance" ? "Đang chờ phê duyệt" :
+                           equipment.status === "Maintenance" ? "Đang bảo trì" :
+                           equipment.status === "Active" ? "Hoạt động" : "Không hoạt động";
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
@@ -87,9 +92,12 @@ export default function EquipmentDetails() {
         <div className="flex gap-2">
           {!isAdminOrManager && (
             <Link href={`/maintenance/request/${id}`}>
-              <Button className="bg-amber-500 hover:bg-amber-600 gap-2">
+              <Button 
+                className="bg-amber-500 hover:bg-amber-600 gap-2"
+                disabled={!canRequestMaintenance}
+              >
                 <Wrench className="h-4 w-4" />
-                Yêu cầu bảo trì
+                {canRequestMaintenance ? "Yêu cầu bảo trì" : "Đã yêu cầu bảo trì"}
               </Button>
             </Link>
           )}
@@ -192,7 +200,7 @@ export default function EquipmentDetails() {
             <dl className="space-y-2">
               <div>
                 <dt className="font-medium">Trạng thái</dt>
-                <dd>{equipment.status === 'Active' ? 'Hoạt động' : equipment.status === 'Maintenance' ? 'Bảo trì' : 'Không hoạt động'}</dd>
+                <dd>{maintenanceStatus}</dd>
               </div>
               <div>
                 <dt className="font-medium">Ngày mua</dt>

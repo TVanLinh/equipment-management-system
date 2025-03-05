@@ -252,13 +252,26 @@ export async function registerRoutes(app: Express) {
     res.json(maintenance);
   });
 
+  // Update maintenance request handling
   app.post("/api/maintenance", requireAuth, async (req, res) => {
-    const result = insertMaintenanceSchema.safeParse(req.body);
-    if (!result.success) {
-      return res.status(400).json({ error: result.error });
+    try {
+      const result = insertMaintenanceSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ error: result.error });
+      }
+
+      // Cập nhật trạng thái thiết bị thành "PendingMaintenance"
+      await storage.updateEquipment(result.data.equipmentId, {
+        status: "PendingMaintenance"
+      });
+
+      // Tạo yêu cầu bảo trì
+      const maintenance = await storage.createMaintenance(result.data);
+      res.json(maintenance);
+    } catch (error) {
+      console.error('Maintenance creation error:', error);
+      res.status(500).json({ error: "Internal server error" });
     }
-    const maintenance = await storage.createMaintenance(result.data);
-    res.json(maintenance);
   });
 
   // Template download routes
