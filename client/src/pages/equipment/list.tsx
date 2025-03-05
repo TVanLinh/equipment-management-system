@@ -112,9 +112,12 @@ export default function EquipmentList() {
                   onChange={handleFileUpload}
                   disabled={importMutation.isPending}
                 />
-                <p className="text-sm text-muted-foreground">
-                  Tải file mẫu: <a href="/template.xlsx" className="text-pink-500 hover:underline">template.xlsx</a>
-                </p>
+                <div className="text-sm text-muted-foreground">
+                  Tải file mẫu:
+                  <a href="/template.xlsx" className="text-pink-500 hover:underline ml-1">template.xlsx</a>
+                  <span className="mx-1">hoặc</span>
+                  <a href="/template.csv" className="text-pink-500 hover:underline">template.csv</a>
+                </div>
               </div>
             </DialogContent>
           </Dialog>

@@ -188,5 +188,50 @@ export async function registerRoutes(app: Express) {
     res.send(buffer);
   });
 
+  // After the existing template.xlsx endpoint, add CSV template endpoint
+  app.get("/template.csv", (_req, res) => {
+    const headers = [
+      "equipment_id",
+      "equipment_name", 
+      "equipment_type",
+      "model",
+      "serial_number",
+      "country_of_origin",
+      "manufacturer",
+      "unit_price",
+      "vat",
+      "funding_source",
+      "supplier",
+      "status",
+      "purchase_date",
+      "warranty_expiry",
+      "department_id"
+    ].join(",");
+
+    const sampleData = [
+      "MD001",
+      "Máy X-Ray DR-3000",
+      "Chẩn đoán hình ảnh",
+      "DR-3000",
+      "XR2023001",
+      "Japan",
+      "Toshiba",
+      "150000000",
+      "10",
+      "Ngân sách nhà nước",
+      "Công ty ABC",
+      "Active",
+      "2023-01-01",
+      "2025-01-01",
+      "1"
+    ].join(",");
+
+    const csvContent = `${headers}\n${sampleData}`;
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename=template.csv');
+    res.send(csvContent);
+  });
+
   return createServer(app);
 }
