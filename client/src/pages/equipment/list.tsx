@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Plus, Search, SlidersHorizontal, Upload, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
-import type { Equipment } from "@shared/schema";
+import type { Equipment, Department } from "@shared/schema";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
@@ -49,6 +49,10 @@ export default function EquipmentList() {
 
   const { data: equipment, isLoading } = useQuery<Equipment[]>({
     queryKey: ["/api/equipment"],
+  });
+
+  const { data: departments } = useQuery<Department[]>({
+    queryKey: ["/api/departments"],
   });
 
   const { toast } = useToast();
@@ -123,6 +127,13 @@ export default function EquipmentList() {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  // Hàm lấy tên phòng ban từ ID
+  const getDepartmentName = (departmentId: number | null) => {
+    if (!departmentId) return "Chưa phân phòng";
+    const department = departments?.find(d => d.id === departmentId);
+    return department?.name || "Không tìm thấy";
+  };
 
   return (
     <div className="space-y-6">
@@ -229,15 +240,19 @@ export default function EquipmentList() {
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.equipmentId}</TableCell>
                 <TableCell>{item.equipmentName}</TableCell>
-                <TableCell>{item.departmentId}</TableCell>
+                <TableCell>{getDepartmentName(item.departmentId)}</TableCell>
                 <TableCell>
                   <span className={cn(
                     "px-2 py-1 rounded-full text-xs font-medium",
                     item.status === "Active"
                       ? "bg-green-100 text-green-700"
-                      : "bg-amber-100 text-amber-700"
+                      : item.status === "Maintenance"
+                      ? "bg-amber-100 text-amber-700"
+                      : "bg-gray-100 text-gray-700"
                   )}>
-                    {item.status}
+                    {item.status === "Active" ? "Đang hoạt động" : 
+                     item.status === "Maintenance" ? "Bảo trì" : 
+                     "Không hoạt động"}
                   </span>
                 </TableCell>
                 <TableCell>{new Date(item.warrantyExpiry).toLocaleDateString('vi-VN')}</TableCell>

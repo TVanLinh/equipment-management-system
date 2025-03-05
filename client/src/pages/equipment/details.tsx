@@ -3,7 +3,7 @@ import { useParams, Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Edit } from "lucide-react";
-import type { Equipment } from "@shared/schema";
+import type { Equipment, Department } from "@shared/schema";
 
 export default function EquipmentDetails() {
   const { id } = useParams();
@@ -12,8 +12,15 @@ export default function EquipmentDetails() {
     queryKey: [`/api/equipment/${id}`],
   });
 
+  const { data: departments } = useQuery<Department[]>({
+    queryKey: ["/api/departments"],
+  });
+
   if (isLoading) return <div>Loading...</div>;
   if (!equipment) return <div>Không tìm thấy thiết bị</div>;
+
+  // Lấy tên phòng ban
+  const department = departments?.find(d => d.id === equipment.departmentId);
 
   return (
     <div className="space-y-6">
@@ -62,6 +69,10 @@ export default function EquipmentDetails() {
               <div>
                 <dt className="font-medium">Số serial</dt>
                 <dd>{equipment.serialNumber}</dd>
+              </div>
+              <div>
+                <dt className="font-medium">Phòng ban</dt>
+                <dd>{department?.name || "Chưa phân phòng"}</dd>
               </div>
             </dl>
           </CardContent>
