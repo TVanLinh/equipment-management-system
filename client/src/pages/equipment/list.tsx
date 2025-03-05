@@ -111,8 +111,17 @@ export default function EquipmentList() {
   };
 
   const filteredEquipment = equipment?.filter((item) => {
-    const matchesSearch = item.equipmentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                       item.equipmentId.toLowerCase().includes(searchQuery.toLowerCase());
+    // Search by multiple fields
+    const searchFields = [
+      item.equipmentId?.toLowerCase() || '',
+      item.equipmentName?.toLowerCase() || '',
+      item.model?.toLowerCase() || '',
+      item.serialNumber?.toLowerCase() || '',
+      item.manufacturer?.toLowerCase() || '',
+    ];
+
+    const matchesSearch = searchQuery === '' || 
+      searchFields.some(field => field.includes(searchQuery.toLowerCase()));
 
     const matchesStatus = statusFilter === "all" || item.status === statusFilter;
 
