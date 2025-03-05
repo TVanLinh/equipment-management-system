@@ -131,20 +131,27 @@ export async function registerRoutes(app: Express) {
   });
 
   app.get("/api/equipment/:id", requireAuth, async (req, res) => {
-    const equipment = await storage.getEquipmentById(Number(req.params.id));
-    if (!equipment) {
-      return res.status(404).json({ error: "Equipment not found" });
+    try {
+      // Kiểm tra thiết bị có tồn tại không
+      const equipment = await storage.getEquipmentById(Number(req.params.id));
+      if (!equipment) {
+        return res.status(404).json({ error: "Không tìm thấy thiết bị" });
+      }
+
+      // Kiểm tra quyền truy cập
+      const user = await storage.getUserById(req.session.userId!);
+      if (!user) return res.status(401).json({ error: "Unauthorized" });
+
+      // Nếu là user thường và thiết bị không thuộc khoa của họ
+      if (user.role === 'user' && equipment.departmentId !== user.departmentId) {
+        return res.status(403).json({ error: "Bạn không có quyền xem thiết bị này" });
+      }
+
+      res.json(equipment);
+    } catch (error) {
+      console.error('Error getting equipment:', error);
+      res.status(500).json({ error: "Internal server error" });
     }
-
-    const user = await storage.getUserById(req.session.userId!);
-    if (!user) return res.status(401).json({ error: "Unauthorized" });
-
-    // Nếu là user thường và thiết bị không thuộc khoa của họ
-    if (user.role === 'user' && equipment.departmentId !== user.departmentId) {
-      return res.status(403).json({ error: "Forbidden" });
-    }
-
-    res.json(equipment);
   });
 
   app.post("/api/equipment", requireAuth, requireAdminOrManager, async (req, res) => {

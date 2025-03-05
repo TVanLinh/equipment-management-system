@@ -127,7 +127,19 @@ export default function EquipmentList() {
   const currentItems = filteredEquipment?.slice(startIndex, endIndex);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!equipment) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">Không tìm thấy dữ liệu thiết bị</p>
+      </div>
+    );
   }
 
   // Hàm lấy tên phòng ban từ ID

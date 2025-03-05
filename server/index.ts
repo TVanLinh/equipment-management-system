@@ -66,7 +66,21 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
         log('Vite setup complete');
       } catch (error) {
         console.error('Failed to setup Vite:', error);
-        process.exit(1);
+        // Fallback to serving static files from client directory
+        log('Falling back to static file serving...');
+        const clientDir = path.join(process.cwd(), 'client');
+        if (fs.existsSync(clientDir)) {
+          app.get('*', (req, res, next) => {
+            if (!req.path.startsWith('/api/')) {
+              res.sendFile(path.join(clientDir, 'index.html'));
+            } else {
+              next();
+            }
+          });
+          log('Static file serving fallback configured');
+        } else {
+          console.error('Client directory not found');
+        }
       }
     } else {
       // Ensure client build directory exists

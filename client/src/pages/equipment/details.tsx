@@ -2,15 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Edit, Wrench } from "lucide-react";
+import { ArrowLeft, Edit, Wrench, Loader2 } from "lucide-react";
 import type { Equipment, Department } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function EquipmentDetails() {
   const { id } = useParams();
   const { isAdminOrManager } = useAuth();
 
-  const { data: equipment, isLoading } = useQuery<Equipment>({
+  const { data: equipment, isLoading, error } = useQuery<Equipment>({
     queryKey: [`/api/equipment/${id}`],
   });
 
@@ -18,8 +19,54 @@ export default function EquipmentDetails() {
     queryKey: ["/api/departments"],
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (!equipment) return <div>Không tìm thấy thiết bị</div>;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  // Hiển thị thông báo lỗi nếu có
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4 mb-6">
+          <Link href="/">
+            <Button variant="outline" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Quay lại danh sách
+            </Button>
+          </Link>
+        </div>
+        <Alert variant="destructive">
+          <AlertDescription>
+            {(error as any)?.message || "Không thể tải thông tin thiết bị"}
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (!equipment) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4 mb-6">
+          <Link href="/">
+            <Button variant="outline" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Quay lại danh sách
+            </Button>
+          </Link>
+        </div>
+        <Alert>
+          <AlertDescription>
+            Không tìm thấy thiết bị
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   // Lấy tên phòng ban
   const department = departments?.find(d => d.id === equipment.departmentId);
