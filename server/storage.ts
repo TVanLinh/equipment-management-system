@@ -5,13 +5,13 @@ export interface IStorage {
   getDepartments(): Promise<Department[]>;
   getDepartment(id: number): Promise<Department | undefined>;
   createDepartment(department: InsertDepartment): Promise<Department>;
-  
+
   // Equipment
   getEquipment(): Promise<Equipment[]>;
   getEquipmentById(id: number): Promise<Equipment | undefined>;
   createEquipment(equipment: InsertEquipment): Promise<Equipment>;
   updateEquipment(id: number, equipment: Partial<InsertEquipment>): Promise<Equipment>;
-  
+
   // Maintenance
   getMaintenance(): Promise<Maintenance[]>;
   getMaintenanceByEquipment(equipmentId: number): Promise<Maintenance[]>;
@@ -30,6 +30,69 @@ export class MemStorage implements IStorage {
     this.departments = new Map();
     this.equipment = new Map();
     this.maintenance = new Map();
+
+    // Khởi tạo dữ liệu mẫu
+    this.initializeSampleData();
+  }
+
+  private initializeSampleData() {
+    // Tạo một số phòng ban mẫu
+    const departments = [
+      { name: "Khoa Nội", code: "NOI" },
+      { name: "Khoa Ngoại", code: "NGO" },
+      { name: "Khoa Cấp cứu", code: "CC" },
+      { name: "Khoa Xét nghiệm", code: "XN" },
+      { name: "Khoa Chẩn đoán hình ảnh", code: "CDHA" }
+    ];
+
+    departments.forEach(dept => {
+      this.createDepartment(dept);
+    });
+
+    // Danh sách loại thiết bị mẫu
+    const equipmentTypes = [
+      "Chẩn đoán hình ảnh",
+      "Phẫu thuật",
+      "Xét nghiệm",
+      "Theo dõi bệnh nhân",
+      "Hồi sức cấp cứu",
+      "Khám bệnh",
+      "Phục hồi chức năng"
+    ];
+
+    // Danh sách nhà sản xuất mẫu
+    const manufacturers = [
+      "Siemens", "Phillips", "GE Healthcare", "Toshiba", "Samsung Medison",
+      "Mindray", "Hitachi", "Canon Medical", "Fujifilm", "Olympus"
+    ];
+
+    // Tạo 50 thiết bị mẫu
+    for (let i = 1; i <= 50; i++) {
+      const purchaseDate = new Date(2020 + Math.floor(Math.random() * 4), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28));
+      const warrantyYears = Math.floor(Math.random() * 3) + 2;
+      const warrantyExpiry = new Date(purchaseDate);
+      warrantyExpiry.setFullYear(warrantyExpiry.getFullYear() + warrantyYears);
+
+      const equipment: InsertEquipment = {
+        equipmentId: `MD${String(i).padStart(3, '0')}`,
+        equipmentName: `Thiết bị ${equipmentTypes[Math.floor(Math.random() * equipmentTypes.length)]} ${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${Math.floor(Math.random() * 1000)}`,
+        equipmentType: equipmentTypes[Math.floor(Math.random() * equipmentTypes.length)],
+        model: `Model-${Math.floor(Math.random() * 9000) + 1000}`,
+        serialNumber: `SN${Math.floor(Math.random() * 90000) + 10000}`,
+        countryOfOrigin: ["Đức", "Nhật Bản", "Hàn Quốc", "Mỹ", "Trung Quốc"][Math.floor(Math.random() * 5)],
+        manufacturer: manufacturers[Math.floor(Math.random() * manufacturers.length)],
+        unitPrice: String(Math.floor(Math.random() * 900000000) + 100000000),
+        vat: String(Math.floor(Math.random() * 3) * 5 + 5), // 5%, 10%, or 15%
+        fundingSource: ["Ngân sách nhà nước", "Viện trợ", "Vốn vay"][Math.floor(Math.random() * 3)],
+        supplier: ["Công ty ABC", "Công ty XYZ", "Công ty Medical", "Công ty Healthcare"][Math.floor(Math.random() * 4)],
+        status: ["Active", "Maintenance", "Inactive"][Math.floor(Math.random() * 3)],
+        purchaseDate: purchaseDate.toISOString().split('T')[0],
+        warrantyExpiry: warrantyExpiry.toISOString().split('T')[0],
+        departmentId: Math.floor(Math.random() * 5) + 1
+      };
+
+      this.createEquipment(equipment);
+    }
   }
 
   async getDepartments(): Promise<Department[]> {
@@ -71,7 +134,7 @@ export class MemStorage implements IStorage {
   async updateEquipment(id: number, updates: Partial<InsertEquipment>): Promise<Equipment> {
     const existing = this.equipment.get(id);
     if (!existing) throw new Error("Equipment not found");
-    
+
     const updated = { ...existing, ...updates };
     this.equipment.set(id, updated);
     return updated;
