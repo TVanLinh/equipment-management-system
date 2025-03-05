@@ -43,7 +43,7 @@ const requireAdminOrManager = async (req: Request, res: Response, next: NextFunc
 };
 
 export async function registerRoutes(app: Express) {
-  // Cấu hình session
+  // Cấu hình session trước khi đăng ký routes
   app.use(
     session({
       secret: 'your-secret-key',
@@ -58,37 +58,49 @@ export async function registerRoutes(app: Express) {
 
   // Auth routes
   app.post("/api/auth/login", async (req, res) => {
-    const result = loginSchema.safeParse(req.body);
-    if (!result.success) {
-      return res.status(400).json({ error: result.error });
-    }
+    try {
+      const result = loginSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ error: result.error });
+      }
 
-    const user = await storage.getUserByUsername(result.data.username);
-    if (!user || user.password !== result.data.password) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
+      const user = await storage.getUserByUsername(result.data.username);
+      if (!user || user.password !== result.data.password) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
 
-    req.session.userId = user.id;
-    res.json({ 
-      id: user.id,
-      username: user.username,
-      role: user.role,
-      departmentId: user.departmentId
-    });
+      req.session.userId = user.id;
+      res.json({ 
+        id: user.id,
+        username: user.username,
+        role: user.role,
+        fullName: user.fullName,
+        departmentId: user.departmentId
+      });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ error: "Internal server error" });
+    }
   });
 
   app.get("/api/auth/me", requireAuth, async (req, res) => {
-    const user = await storage.getUserById(req.session.userId!);
-    if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
+    try {
+      const user = await storage.getUserById(req.session.userId!);
+      if (!user) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
 
-    res.json({
-      id: user.id,
-      username: user.username,
-      role: user.role,
-      departmentId: user.departmentId
-    });
+      res.json({
+        id: user.id,
+        username: user.username,
+        role: user.role,
+        fullName: user.fullName,
+        departmentId: user.departmentId
+      });
+    } catch (error) {
+      console.error('Auth check error:', error);
+      res.status(500).json({ error: "Internal server error" });
+    }
   });
 
   app.post("/api/auth/logout", (req, res) => {
@@ -318,7 +330,6 @@ export async function registerRoutes(app: Express) {
     res.setHeader('Content-Disposition', 'attachment; filename=template.csv');
     res.send(csvContent);
   });
-
 
   // Get all users (admin only)
   app.get("/api/users", requireAuth, requireAdminOrManager, async (_req, res) => {

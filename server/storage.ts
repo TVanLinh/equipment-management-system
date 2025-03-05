@@ -66,7 +66,6 @@ export class MemStorage implements IStorage {
       this.createDepartment(department);
     });
 
-    // Tạo users mẫu
     // Tìm ID của Phòng Vật Tư và Ban giám đốc
     const vtttbDept = Array.from(this.departments.values()).find(d => d.code === 'VTTTB');
     const bgdDept = Array.from(this.departments.values()).find(d => d.code === 'BGĐ');
@@ -76,6 +75,7 @@ export class MemStorage implements IStorage {
       this.createUser({
         username: 'admin',
         password: 'admin123',
+        fullName: 'Administrator',
         departmentId: vtttbDept.id,
         role: 'admin'
       });
@@ -86,6 +86,7 @@ export class MemStorage implements IStorage {
       this.createUser({
         username: 'manager',
         password: 'manager123',
+        fullName: 'Manager',
         departmentId: bgdDept.id,
         role: 'manager'
       });
@@ -98,6 +99,7 @@ export class MemStorage implements IStorage {
         this.createUser({
           username: dept.code.toLowerCase(),
           password: 'user123',
+          fullName: dept.name,
           departmentId: dept.id,
           role: 'user'
         });

@@ -1,22 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
+import type { User } from "@shared/schema";
 
-interface User {
+interface AuthUser {
   id: number;
   username: string;
   role: 'admin' | 'manager' | 'user';
-  departmentId: number;
+  fullName: string;
+  departmentId: number | null;
 }
 
 export function useAuth() {
-  const { data: user, isLoading } = useQuery<User>({
+  const { data: user, isLoading } = useQuery<AuthUser>({
     queryKey: ["/api/auth/me"],
     retry: false,
-    onError: (error) => {
-      console.error("Auth error:", error);
-    },
-    onSuccess: (data) => {
-      console.log("Auth successful:", data);
-    }
   });
 
   const isAdmin = user?.role === 'admin';

@@ -4,24 +4,45 @@ import {
   LayoutDashboard, 
   Building2, 
   Wrench,
-  Users
+  Users,
+  LogOut
 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Equipment } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Sidebar() {
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data: equipment } = useQuery<Equipment[]>({
     queryKey: ["/api/equipment"],
   });
 
-  const { isAdminOrManager } = useAuth();
+  const { user, isAdminOrManager } = useAuth();
 
   // Tính toán số lượng thiết bị theo trạng thái
   const activeCount = equipment?.filter(item => item.status === "Active").length || 0;
   const maintenanceCount = equipment?.filter(item => item.status === "Maintenance").length || 0;
+
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest("POST", "/api/auth/logout");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.clear();
+      navigate("/login");
+      toast({
+        title: "Đã đăng xuất",
+      });
+    },
+  });
 
   const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
     <Link href={href}>
@@ -41,6 +62,31 @@ export default function Sidebar() {
   return (
     <div className="bg-white border-r min-h-screen fixed top-0 left-0 w-64">
       <div className="p-4">
+        {/* User Info */}
+        <div className="mb-8 p-4 border-b">
+          <div className="flex items-center gap-3 mb-3">
+            <Avatar>
+              <AvatarFallback>
+                {user?.username.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <div className="font-medium">{user?.fullName}</div>
+              <div className="text-sm text-gray-500">{user?.username}</div>
+            </div>
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full gap-2"
+            onClick={() => logoutMutation.mutate()}
+            disabled={logoutMutation.isPending}
+          >
+            <LogOut size={16} />
+            Đăng xuất
+          </Button>
+        </div>
+
         <div className="mb-8">
           <h1 className="text-xl font-bold mb-6">Quản lý Thiết bị</h1>
 
