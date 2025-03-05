@@ -12,6 +12,7 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  fullName: text("full_name").notNull(),
   departmentId: integer("department_id").references(() => departments.id),
   role: text("role").notNull(), // 'admin' | 'manager' | 'user'
 });
@@ -59,6 +60,11 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
+export const resetPasswordSchema = z.object({
+  id: z.number(),
+  newPassword: z.string().min(6, "Password must be at least 6 characters"),
+});
+
 // Types
 export type Department = typeof departments.$inferSelect;
 export type Equipment = typeof equipment.$inferSelect;
@@ -70,3 +76,4 @@ export type InsertEquipment = z.infer<typeof insertEquipmentSchema>;
 export type InsertMaintenance = z.infer<typeof insertMaintenanceSchema>;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type LoginUser = z.infer<typeof loginSchema>;
+export type ResetPassword = z.infer<typeof resetPasswordSchema>;

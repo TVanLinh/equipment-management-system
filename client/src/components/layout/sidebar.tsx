@@ -3,10 +3,12 @@ import { cn } from "@/lib/utils";
 import { 
   LayoutDashboard, 
   Building2, 
-  Wrench
+  Wrench,
+  Users
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import type { Equipment } from "@shared/schema";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function Sidebar() {
   const [location] = useLocation();
@@ -14,6 +16,8 @@ export default function Sidebar() {
   const { data: equipment } = useQuery<Equipment[]>({
     queryKey: ["/api/equipment"],
   });
+
+  const { isAdminOrManager } = useAuth();
 
   // Tính toán số lượng thiết bị theo trạng thái
   const activeCount = equipment?.filter(item => item.status === "Active").length || 0;
@@ -70,6 +74,12 @@ export default function Sidebar() {
             <Wrench size={20} />
             Bảo trì
           </NavLink>
+          {isAdminOrManager && (
+            <NavLink href="/users">
+              <Users size={20} />
+              Quản lý người dùng
+            </NavLink>
+          )}
         </nav>
       </div>
     </div>

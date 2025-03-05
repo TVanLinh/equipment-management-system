@@ -14,6 +14,8 @@ import Login from "@/pages/auth/login";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
+import UserList from "@/pages/users/list";
+import AddUser from "@/pages/users/add";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [, navigate] = useLocation();
@@ -56,6 +58,8 @@ function Router() {
                 <Route path="/equipment/:id/edit" component={EditEquipment} />
                 <Route path="/departments" component={DepartmentList} />
                 <Route path="/maintenance" component={MaintenanceList} />
+                <Route path="/users" component={UserList} />
+                <Route path="/users/add" component={AddUser} />
                 <Route component={NotFound} />
               </Switch>
             </main>

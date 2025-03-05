@@ -1,7 +1,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import { storage } from "./storage";
-import { insertDepartmentSchema, insertEquipmentSchema, insertMaintenanceSchema, loginSchema } from "@shared/schema";
+import { insertDepartmentSchema, insertEquipmentSchema, insertMaintenanceSchema, loginSchema, insertUserSchema, resetPasswordSchema } from "@shared/schema";
 import multer from "multer";
 import xlsx from "xlsx";
 import session from 'express-session';
@@ -317,6 +317,48 @@ export async function registerRoutes(app: Express) {
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename=template.csv');
     res.send(csvContent);
+  });
+
+
+  // Get all users (admin only)
+  app.get("/api/users", requireAuth, requireAdminOrManager, async (_req, res) => {
+    const users = await storage.getUsers();
+    res.json(users);
+  });
+
+  // Create new user (admin only)
+  app.post("/api/users", requireAuth, requireAdminOrManager, async (req, res) => {
+    const result = insertUserSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({ error: result.error });
+    }
+    const user = await storage.createUser(result.data);
+    res.json(user);
+  });
+
+  // Reset password (admin only)
+  app.post("/api/users/:id/reset-password", requireAuth, requireAdminOrManager, async (req, res) => {
+    const result = resetPasswordSchema.safeParse({
+      id: Number(req.params.id),
+      newPassword: req.body.newPassword
+    });
+    if (!result.success) {
+      return res.status(400).json({ error: result.error });
+    }
+
+    try {
+      const user = await storage.getUserById(result.data.id);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const updatedUser = await storage.updateUser(result.data.id, {
+        password: result.data.newPassword
+      });
+      res.json(updatedUser);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to reset password" });
+    }
   });
 
   return createServer(app);

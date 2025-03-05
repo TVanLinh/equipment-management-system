@@ -25,6 +25,7 @@ export interface IStorage {
   getUserById(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, updates: Partial<InsertUser>): Promise<User>;
 }
 
 export class MemStorage implements IStorage {
@@ -221,6 +222,14 @@ export class MemStorage implements IStorage {
     };
     this.users.set(id, newUser);
     return newUser;
+  }
+  async updateUser(id: number, updates: Partial<InsertUser>): Promise<User> {
+    const existing = this.users.get(id);
+    if (!existing) throw new Error("User not found");
+
+    const updated = { ...existing, ...updates };
+    this.users.set(id, updated);
+    return updated;
   }
 }
 
