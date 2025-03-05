@@ -6,6 +6,7 @@ import Sidebar from "@/components/layout/sidebar";
 import NotFound from "@/pages/not-found";
 import EquipmentList from "@/pages/equipment/list";
 import EquipmentDetails from "@/pages/equipment/details";
+import EditEquipment from "@/pages/equipment/edit";
 import AddEquipment from "@/pages/equipment/add";
 import DepartmentList from "@/pages/departments/list";
 import MaintenanceList from "@/pages/maintenance/list";
@@ -19,6 +20,7 @@ function Router() {
           <Route path="/" component={EquipmentList} />
           <Route path="/equipment/add" component={AddEquipment} />
           <Route path="/equipment/:id" component={EquipmentDetails} />
+          <Route path="/equipment/:id/edit" component={EditEquipment} />
           <Route path="/departments" component={DepartmentList} />
           <Route path="/maintenance" component={MaintenanceList} />
           <Route component={NotFound} />
