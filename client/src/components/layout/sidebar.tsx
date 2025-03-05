@@ -9,10 +9,20 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import type { Equipment } from "@shared/schema";
 
 export default function Sidebar() {
   const [location] = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const { data: equipment } = useQuery<Equipment[]>({
+    queryKey: ["/api/equipment"],
+  });
+
+  // Tính toán số lượng thiết bị theo trạng thái
+  const activeCount = equipment?.filter(item => item.status === "Active").length || 0;
+  const maintenanceCount = equipment?.filter(item => item.status === "Maintenance").length || 0;
 
   const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
     <Link href={href}>
@@ -60,14 +70,14 @@ export default function Sidebar() {
             <div className="grid grid-cols-2 gap-4">
               <div className="p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-2 text-green-600">
-                  <span className="text-2xl font-bold">234</span>
+                  <span className="text-2xl font-bold">{activeCount}</span>
                 </div>
                 <span className="text-sm text-gray-600">Đang hoạt động</span>
               </div>
 
               <div className="p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-2 text-amber-600">
-                  <span className="text-2xl font-bold">18</span>
+                  <span className="text-2xl font-bold">{maintenanceCount}</span>
                 </div>
                 <span className="text-sm text-gray-600">Cần bảo trì</span>
               </div>
