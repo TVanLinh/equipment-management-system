@@ -4,8 +4,6 @@ import {
   LayoutDashboard, 
   Building2, 
   Wrench,
-  CircleDot,
-  AlertTriangle,
   ChevronLeft,
   ChevronRight
 } from "lucide-react";
@@ -58,23 +56,23 @@ export default function Sidebar() {
             {isCollapsed ? "EMS" : "Quản lý Thiết bị"}
           </h1>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-2 text-green-600 mb-1">
-                <CircleDot size={16} />
-                {!isCollapsed && <span className="text-sm">Đang hoạt động</span>}
+          {!isCollapsed && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-2 text-green-600">
+                  <span className="text-2xl font-bold">234</span>
+                </div>
+                <span className="text-sm text-gray-600">Đang hoạt động</span>
               </div>
-              <span className="text-2xl font-bold">234</span>
-            </div>
 
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-2 text-amber-600 mb-1">
-                <AlertTriangle size={16} />
-                {!isCollapsed && <span className="text-sm">Cần bảo trì</span>}
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-2 text-amber-600">
+                  <span className="text-2xl font-bold">18</span>
+                </div>
+                <span className="text-sm text-gray-600">Cần bảo trì</span>
               </div>
-              <span className="text-2xl font-bold">18</span>
             </div>
-          </div>
+          )}
         </div>
 
         <nav className="space-y-1">
