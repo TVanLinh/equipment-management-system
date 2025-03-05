@@ -2,11 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Edit } from "lucide-react";
+import { ArrowLeft, Edit, Wrench } from "lucide-react";
 import type { Equipment, Department } from "@shared/schema";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function EquipmentDetails() {
   const { id } = useParams();
+  const { isAdminOrManager } = useAuth();
 
   const { data: equipment, isLoading } = useQuery<Equipment>({
     queryKey: [`/api/equipment/${id}`],
@@ -35,12 +37,25 @@ export default function EquipmentDetails() {
           <h1 className="text-3xl font-bold">Chi tiết thiết bị</h1>
         </div>
 
-        <Link href={`/equipment/${id}/edit`}>
-          <Button className="bg-pink-500 hover:bg-pink-600 gap-2">
-            <Edit className="h-4 w-4" />
-            Chỉnh sửa
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+          {!isAdminOrManager && (
+            <Link href={`/maintenance/request/${id}`}>
+              <Button className="bg-amber-500 hover:bg-amber-600 gap-2">
+                <Wrench className="h-4 w-4" />
+                Yêu cầu bảo trì
+              </Button>
+            </Link>
+          )}
+
+          {isAdminOrManager && (
+            <Link href={`/equipment/${id}/edit`}>
+              <Button className="bg-pink-500 hover:bg-pink-600 gap-2">
+                <Edit className="h-4 w-4" />
+                Chỉnh sửa
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">

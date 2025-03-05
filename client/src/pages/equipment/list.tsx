@@ -38,6 +38,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
 import { useState } from "react";
 
 export default function EquipmentList() {
@@ -55,6 +56,7 @@ export default function EquipmentList() {
     queryKey: ["/api/departments"],
   });
 
+  const { isAdminOrManager } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -81,7 +83,7 @@ export default function EquipmentList() {
         description: `Đã import ${data.imported} thiết bị vào hệ thống`,
       });
       queryClient.invalidateQueries({ queryKey: ["/api/equipment"] });
-      setIsImportDialogOpen(false); // Đóng dialog khi import thành công
+      setIsImportDialogOpen(false);
     },
     onError: (error) => {
       toast({
@@ -110,7 +112,7 @@ export default function EquipmentList() {
 
   const filteredEquipment = equipment?.filter((item) => {
     const matchesSearch = item.equipmentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         item.equipmentId.toLowerCase().includes(searchQuery.toLowerCase());
+                       item.equipmentId.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesStatus = statusFilter === "all" || item.status === statusFilter;
 
@@ -139,49 +141,51 @@ export default function EquipmentList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Danh sách thiết bị</h1>
-        <div className="flex gap-2">
-          <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="gap-2" disabled={importMutation.isPending}>
-                {importMutation.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Upload size={20} />
-                )}
-                Import
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Import thiết bị từ file</DialogTitle>
-                <DialogDescription>
-                  Chọn file Excel (.xlsx) hoặc CSV chứa danh sách thiết bị để import
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <Input
-                  type="file"
-                  accept=".xlsx,.csv"
-                  onChange={handleFileUpload}
-                  disabled={importMutation.isPending}
-                />
-                <div className="text-sm text-muted-foreground">
-                  Tải file mẫu:
-                  <a href="/template.xlsx" className="text-pink-500 hover:underline ml-1">template.xlsx</a>
-                  <span className="mx-1">hoặc</span>
-                  <a href="/template.csv" className="text-pink-500 hover:underline">template.csv</a>
+        {isAdminOrManager && (
+          <div className="flex gap-2">
+            <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="gap-2" disabled={importMutation.isPending}>
+                  {importMutation.isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Upload size={20} />
+                  )}
+                  Import
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Import thiết bị từ file</DialogTitle>
+                  <DialogDescription>
+                    Chọn file Excel (.xlsx) hoặc CSV chứa danh sách thiết bị để import
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <Input
+                    type="file"
+                    accept=".xlsx,.csv"
+                    onChange={handleFileUpload}
+                    disabled={importMutation.isPending}
+                  />
+                  <div className="text-sm text-muted-foreground">
+                    Tải file mẫu:
+                    <a href="/template.xlsx" className="text-pink-500 hover:underline ml-1">template.xlsx</a>
+                    <span className="mx-1">hoặc</span>
+                    <a href="/template.csv" className="text-pink-500 hover:underline">template.csv</a>
+                  </div>
                 </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+              </DialogContent>
+            </Dialog>
 
-          <Link href="/equipment/add">
-            <Button className="bg-pink-500 hover:bg-pink-600">
-              <Plus className="mr-2 h-4 w-4" />
-              Thêm thiết bị
-            </Button>
-          </Link>
-        </div>
+            <Link href="/equipment/add">
+              <Button className="bg-pink-500 hover:bg-pink-600">
+                <Plus className="mr-2 h-4 w-4" />
+                Thêm thiết bị
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="flex gap-4 mb-6">

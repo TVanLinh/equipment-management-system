@@ -1,14 +1,21 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import { storage } from "./storage";
-import { insertDepartmentSchema, insertEquipmentSchema, insertMaintenanceSchema } from "@shared/schema";
+import { insertDepartmentSchema, insertEquipmentSchema, insertMaintenanceSchema, loginSchema } from "@shared/schema";
 import multer from "multer";
 import xlsx from "xlsx";
+import session from 'express-session';
 import { z } from "zod";
+
+declare module 'express-session' {
+  interface SessionData {
+    userId: number;
+  }
+}
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  fileFilter: (_req, file, cb) => {
+  fileFilter: (_req, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     if (file.mimetype === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || 
         file.mimetype === "text/csv") {
       cb(null, true);
@@ -18,37 +25,117 @@ const upload = multer({
   }
 });
 
+// Middleware để kiểm tra xem người dùng đã đăng nhập chưa
+const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  next();
+};
+
+// Middleware để kiểm tra quyền admin/manager
+const requireAdminOrManager = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await storage.getUserById(req.session.userId!);
+  if (!user || (user.role !== 'admin' && user.role !== 'manager')) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+  next();
+};
+
 export async function registerRoutes(app: Express) {
+  // Cấu hình session
+  app.use(
+    session({
+      secret: 'your-secret-key',
+      resave: false,
+      saveUninitialized: false,
+      cookie: { 
+        secure: false, // Set to true if using HTTPS
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      }
+    })
+  );
+
+  // Auth routes
+  app.post("/api/auth/login", async (req, res) => {
+    const result = loginSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({ error: result.error });
+    }
+
+    const user = await storage.getUserByUsername(result.data.username);
+    if (!user || user.password !== result.data.password) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    req.session.userId = user.id;
+    res.json({ 
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      departmentId: user.departmentId
+    });
+  });
+
+  app.get("/api/auth/me", requireAuth, async (req, res) => {
+    const user = await storage.getUserById(req.session.userId!);
+    if (!user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    res.json({
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      departmentId: user.departmentId
+    });
+  });
+
+  app.post("/api/auth/logout", (req, res) => {
+    req.session.destroy(() => {
+      res.json({ success: true });
+    });
+  });
+
   // Departments
-  app.get("/api/departments", async (_req, res) => {
+  app.get("/api/departments", requireAuth, async (_req, res) => {
     const departments = await storage.getDepartments();
     res.json(departments);
   });
 
-  app.post("/api/departments", async (req, res) => {
-    const result = insertDepartmentSchema.safeParse(req.body);
-    if (!result.success) {
-      return res.status(400).json({ error: result.error });
-    }
-    const department = await storage.createDepartment(result.data);
-    res.json(department);
-  });
-
   // Equipment
-  app.get("/api/equipment", async (_req, res) => {
-    const equipment = await storage.getEquipment();
+  app.get("/api/equipment", requireAuth, async (req, res) => {
+    const user = await storage.getUserById(req.session.userId!);
+    if (!user) return res.status(401).json({ error: "Unauthorized" });
+
+    let equipment = await storage.getEquipment();
+
+    // Nếu là user thường, chỉ trả về thiết bị thuộc khoa của họ
+    if (user.role === 'user') {
+      equipment = equipment.filter(e => e.departmentId === user.departmentId);
+    }
+
     res.json(equipment);
   });
 
-  app.get("/api/equipment/:id", async (req, res) => {
+  app.get("/api/equipment/:id", requireAuth, async (req, res) => {
     const equipment = await storage.getEquipmentById(Number(req.params.id));
     if (!equipment) {
       return res.status(404).json({ error: "Equipment not found" });
     }
+
+    const user = await storage.getUserById(req.session.userId!);
+    if (!user) return res.status(401).json({ error: "Unauthorized" });
+
+    // Nếu là user thường và thiết bị không thuộc khoa của họ
+    if (user.role === 'user' && equipment.departmentId !== user.departmentId) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
     res.json(equipment);
   });
 
-  app.post("/api/equipment", async (req, res) => {
+  app.post("/api/equipment", requireAuth, requireAdminOrManager, async (req, res) => {
     const result = insertEquipmentSchema.safeParse(req.body);
     if (!result.success) {
       return res.status(400).json({ error: result.error });
@@ -57,7 +144,7 @@ export async function registerRoutes(app: Express) {
     res.json(equipment);
   });
 
-  app.patch("/api/equipment/:id", async (req, res) => {
+  app.patch("/api/equipment/:id", requireAuth, requireAdminOrManager, async (req, res) => {
     const result = insertEquipmentSchema.partial().safeParse(req.body);
     if (!result.success) {
       return res.status(400).json({ error: result.error });
@@ -70,8 +157,8 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Import Equipment from Excel/CSV
-  app.post("/api/equipment/import", upload.single('file'), async (req, res) => {
+  // Import Equipment
+  app.post("/api/equipment/import", requireAuth, requireAdminOrManager, upload.single('file'), async (req: Request & { file?: Express.Multer.File }, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: "No file uploaded" });
@@ -84,9 +171,8 @@ export async function registerRoutes(app: Express) {
       const results = [];
       const errors = [];
 
-      for (const row of data) {
+      for (const row of data as Record<string, unknown>[]) {
         try {
-          // Convert Excel/CSV data to proper types
           const equipment = {
             equipmentId: String(row.equipment_id || row.equipmentId || ''),
             equipmentName: String(row.equipment_name || row.equipmentName || ''),
@@ -100,17 +186,13 @@ export async function registerRoutes(app: Express) {
             fundingSource: String(row.funding_source || row.fundingSource || ''),
             supplier: String(row.supplier || ''),
             status: String(row.status || 'Active'),
-            purchaseDate: row.purchase_date || row.purchaseDate || new Date().toISOString().split('T')[0],
-            warrantyExpiry: row.warranty_expiry || row.warrantyExpiry || new Date().toISOString().split('T')[0],
+            purchaseDate: String(row.purchase_date || row.purchaseDate || new Date().toISOString().split('T')[0]),
+            warrantyExpiry: String(row.warranty_expiry || row.warrantyExpiry || new Date().toISOString().split('T')[0]),
             departmentId: Number(row.department_id || row.departmentId || null)
           };
 
-          // Add debug logging
-          console.log('Processing row:', equipment);
-
           const result = insertEquipmentSchema.safeParse(equipment);
           if (!result.success) {
-            console.log('Validation errors:', result.error.errors);
             errors.push({
               row: equipment,
               errors: result.error.errors,
@@ -121,7 +203,6 @@ export async function registerRoutes(app: Express) {
           const savedEquipment = await storage.createEquipment(result.data);
           results.push(savedEquipment);
         } catch (error) {
-          console.error('Error processing row:', error);
           errors.push({
             row,
             error: error instanceof Error ? error.message : "Unknown error",
@@ -135,7 +216,6 @@ export async function registerRoutes(app: Express) {
         errors: errors.length ? errors : undefined,
       });
     } catch (error) {
-      console.error('Import error:', error);
       res.status(400).json({
         error: error instanceof Error ? error.message : "Failed to process file",
       });
@@ -143,17 +223,17 @@ export async function registerRoutes(app: Express) {
   });
 
   // Maintenance
-  app.get("/api/maintenance", async (_req, res) => {
+  app.get("/api/maintenance", requireAuth, async (_req, res) => {
     const maintenance = await storage.getMaintenance();
     res.json(maintenance);
   });
 
-  app.get("/api/equipment/:id/maintenance", async (req, res) => {
+  app.get("/api/equipment/:id/maintenance", requireAuth, async (req, res) => {
     const maintenance = await storage.getMaintenanceByEquipment(Number(req.params.id));
     res.json(maintenance);
   });
 
-  app.post("/api/maintenance", async (req, res) => {
+  app.post("/api/maintenance", requireAuth, async (req, res) => {
     const result = insertMaintenanceSchema.safeParse(req.body);
     if (!result.success) {
       return res.status(400).json({ error: result.error });
@@ -162,8 +242,8 @@ export async function registerRoutes(app: Express) {
     res.json(maintenance);
   });
 
-  // Download template
-  app.get("/template.xlsx", (_req, res) => {
+  // Template download routes
+  app.get("/template.xlsx", requireAuth, (_req, res) => {
     const template = [
       {
         equipment_id: "MD001",
@@ -195,8 +275,7 @@ export async function registerRoutes(app: Express) {
     res.send(buffer);
   });
 
-  // After the existing template.xlsx endpoint, add CSV template endpoint
-  app.get("/template.csv", (_req, res) => {
+  app.get("/template.csv", requireAuth, (_req, res) => {
     const headers = [
       "equipment_id",
       "equipment_name", 
