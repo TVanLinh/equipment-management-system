@@ -21,10 +21,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { useState } from "react";
 
 export default function EquipmentList() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+
   const { data: equipment, isLoading } = useQuery<Equipment[]>({
     queryKey: ["/api/equipment"],
   });
@@ -69,7 +81,6 @@ export default function EquipmentList() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check file type
     if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.csv')) {
       toast({
         title: "Lỗi",
@@ -81,6 +92,15 @@ export default function EquipmentList() {
 
     importMutation.mutate(file);
   };
+
+  const filteredEquipment = equipment?.filter((item) => {
+    const matchesSearch = item.equipmentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         item.equipmentId.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesStatus = statusFilter === "all" || item.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -138,12 +158,31 @@ export default function EquipmentList() {
       <div className="flex gap-4 mb-6">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-          <Input placeholder="Tìm kiếm thiết bị..." className="pl-10" />
+          <Input 
+            placeholder="Tìm kiếm thiết bị..." 
+            className="pl-10" 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
-        <Button variant="outline" className="gap-2">
-          <SlidersHorizontal size={20} />
-          Bộ lọc
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="gap-2">
+              <SlidersHorizontal size={20} />
+              Bộ lọc
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Trạng thái</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioGroup value={statusFilter} onValueChange={setStatusFilter}>
+              <DropdownMenuRadioItem value="all">Tất cả</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="Active">Đang hoạt động</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="Maintenance">Bảo trì</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="Inactive">Không hoạt động</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="rounded-md border bg-white">
@@ -159,7 +198,7 @@ export default function EquipmentList() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {equipment?.map((item) => (
+            {filteredEquipment?.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.equipmentId}</TableCell>
                 <TableCell>{item.equipmentName}</TableCell>
