@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "wouter";
+import { useParams, Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import type { Equipment } from "@shared/schema";
 
 export default function EquipmentDetails() {
@@ -15,7 +17,15 @@ export default function EquipmentDetails() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Chi tiết thiết bị</h1>
+      <div className="flex items-center gap-4 mb-6">
+        <Link href="/">
+          <Button variant="outline" className="gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Quay lại
+          </Button>
+        </Link>
+        <h1 className="text-3xl font-bold">Chi tiết thiết bị</h1>
+      </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         <Card>
