@@ -314,7 +314,7 @@ export default function EditEquipment() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Tình trạng</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Chọn tình trạng" />
@@ -324,6 +324,7 @@ export default function EditEquipment() {
                           <SelectItem value="Active">Hoạt động</SelectItem>
                           <SelectItem value="Maintenance">Bảo trì</SelectItem>
                           <SelectItem value="Inactive">Không hoạt động</SelectItem>
+                          <SelectItem value="PendingMaintenance">Đang chờ phê duyệt bảo trì</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
