@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Search, SlidersHorizontal, Upload } from "lucide-react";
+import { Plus, Search, SlidersHorizontal, Upload, Loader2 } from "lucide-react";
 import type { Equipment } from "@shared/schema";
 import { cn } from "@/lib/utils";
 import {
@@ -49,10 +49,10 @@ export default function EquipmentList() {
 
       return res.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast({
-        title: "Thành công",
-        description: "Import thiết bị thành công",
+        title: "Import thành công",
+        description: `Đã import ${data.imported} thiết bị vào hệ thống`,
       });
       queryClient.invalidateQueries({ queryKey: ["/api/equipment"] });
     },
@@ -93,8 +93,12 @@ export default function EquipmentList() {
         <div className="flex gap-2">
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" className="gap-2">
-                <Upload size={20} />
+              <Button variant="outline" className="gap-2" disabled={importMutation.isPending}>
+                {importMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Upload size={20} />
+                )}
                 Import
               </Button>
             </DialogTrigger>
