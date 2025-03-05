@@ -12,7 +12,11 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Equipment } from "@shared/schema";
 
-export default function Sidebar() {
+interface SidebarProps {
+  onCollapse?: (collapsed: boolean) => void;
+}
+
+export default function Sidebar({ onCollapse }: SidebarProps) {
   const [location] = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -44,6 +48,11 @@ export default function Sidebar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  const handleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+    onCollapse?.(!isCollapsed);
+  };
+
   const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
     <Link href={href}>
       <a
@@ -69,7 +78,7 @@ export default function Sidebar() {
         variant="ghost"
         size="icon"
         className="absolute -right-4 top-6 h-8 w-8 rounded-full border bg-white"
-        onClick={() => setIsCollapsed(!isCollapsed)}
+        onClick={handleCollapse}
       >
         {isCollapsed ? (
           <ChevronRight className="h-4 w-4" />
