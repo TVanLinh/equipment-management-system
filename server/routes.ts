@@ -86,26 +86,31 @@ export async function registerRoutes(app: Express) {
 
       for (const row of data) {
         try {
+          // Convert Excel/CSV data to proper types
           const equipment = {
-            equipmentId: row.equipment_id || row.equipmentId,
-            equipmentName: row.equipment_name || row.equipmentName,
-            equipmentType: row.equipment_type || row.equipmentType,
-            model: row.model,
-            serialNumber: row.serial_number || row.serialNumber,
-            countryOfOrigin: row.country_of_origin || row.countryOfOrigin,
-            manufacturer: row.manufacturer,
-            unitPrice: row.unit_price || row.unitPrice,
-            vat: row.vat,
-            fundingSource: row.funding_source || row.fundingSource,
-            supplier: row.supplier,
-            status: row.status || "Active",
-            purchaseDate: row.purchase_date || row.purchaseDate,
-            warrantyExpiry: row.warranty_expiry || row.warrantyExpiry,
-            departmentId: row.department_id || row.departmentId,
+            equipmentId: String(row.equipment_id || row.equipmentId || ''),
+            equipmentName: String(row.equipment_name || row.equipmentName || ''),
+            equipmentType: String(row.equipment_type || row.equipmentType || ''),
+            model: String(row.model || ''),
+            serialNumber: String(row.serial_number || row.serialNumber || ''),
+            countryOfOrigin: String(row.country_of_origin || row.countryOfOrigin || ''),
+            manufacturer: String(row.manufacturer || ''),
+            unitPrice: String(row.unit_price || row.unitPrice || '0'),
+            vat: String(row.vat || '0'),
+            fundingSource: String(row.funding_source || row.fundingSource || ''),
+            supplier: String(row.supplier || ''),
+            status: String(row.status || 'Active'),
+            purchaseDate: row.purchase_date || row.purchaseDate || new Date().toISOString().split('T')[0],
+            warrantyExpiry: row.warranty_expiry || row.warrantyExpiry || new Date().toISOString().split('T')[0],
+            departmentId: Number(row.department_id || row.departmentId || null)
           };
+
+          // Add debug logging
+          console.log('Processing row:', equipment);
 
           const result = insertEquipmentSchema.safeParse(equipment);
           if (!result.success) {
+            console.log('Validation errors:', result.error.errors);
             errors.push({
               row: equipment,
               errors: result.error.errors,
@@ -116,6 +121,7 @@ export async function registerRoutes(app: Express) {
           const savedEquipment = await storage.createEquipment(result.data);
           results.push(savedEquipment);
         } catch (error) {
+          console.error('Error processing row:', error);
           errors.push({
             row,
             error: error instanceof Error ? error.message : "Unknown error",
@@ -129,6 +135,7 @@ export async function registerRoutes(app: Express) {
         errors: errors.length ? errors : undefined,
       });
     } catch (error) {
+      console.error('Import error:', error);
       res.status(400).json({
         error: error instanceof Error ? error.message : "Failed to process file",
       });
