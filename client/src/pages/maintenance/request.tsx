@@ -1,7 +1,7 @@
 import { useParams, useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { Link } from "wouter";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -66,7 +66,11 @@ export default function MaintenanceRequest() {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   if (!equipment) {
@@ -123,7 +127,14 @@ export default function MaintenanceRequest() {
           />
 
           <Button type="submit" className="w-full" disabled={mutation.isPending}>
-            Gửi yêu cầu bảo trì
+            {mutation.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                Đang xử lý...
+              </>
+            ) : (
+              'Gửi yêu cầu bảo trì'
+            )}
           </Button>
         </form>
       </Form>
