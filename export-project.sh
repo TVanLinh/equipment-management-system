@@ -8,9 +8,9 @@ mkdir -p exports
 echo "Exporting database data..."
 npx tsx server/export-data.ts
 
-# Create a zip file of the entire project
+# Create a tar archive of the entire project
 echo "Creating project archive..."
-zip -r exports/equipment_master_project.zip . -x "node_modules/*" "exports/*" ".git/*"
+tar --exclude="node_modules" --exclude="exports" --exclude=".git" -czf exports/equipment_master_project.tar.gz .
 
-echo "Project exported successfully to exports/equipment_master_project.zip"
+echo "Project exported successfully to exports/equipment_master_project.tar.gz"
 echo "Database data exported to exports/equipment_master_data.json"
