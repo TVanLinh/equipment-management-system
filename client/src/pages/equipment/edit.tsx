@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ import type { InsertEquipment, Equipment } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
+
 export default function EditEquipment() {
   const { id } = useParams();
   const [, navigate] = useLocation();
@@ -41,7 +43,7 @@ export default function EditEquipment() {
   });
 
   // Cập nhật form khi có dữ liệu thiết bị
-  React.useEffect(() => {
+  useEffect(() => {
     if (equipment) {
       form.reset(equipment);
     }
