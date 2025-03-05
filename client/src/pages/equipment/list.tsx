@@ -45,6 +45,7 @@ export default function EquipmentList() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState("50");
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
   const { data: equipment, isLoading } = useQuery<Equipment[]>({
     queryKey: ["/api/equipment"],
@@ -76,6 +77,7 @@ export default function EquipmentList() {
         description: `Đã import ${data.imported} thiết bị vào hệ thống`,
       });
       queryClient.invalidateQueries({ queryKey: ["/api/equipment"] });
+      setIsImportDialogOpen(false); // Đóng dialog khi import thành công
     },
     onError: (error) => {
       toast({
@@ -127,7 +129,7 @@ export default function EquipmentList() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Danh sách thiết bị</h1>
         <div className="flex gap-2">
-          <Dialog>
+          <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" className="gap-2" disabled={importMutation.isPending}>
                 {importMutation.isPending ? (
