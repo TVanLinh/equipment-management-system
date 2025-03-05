@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Search, SlidersHorizontal, Upload, Loader2 } from "lucide-react";
+import { Plus, Search, SlidersHorizontal, Upload, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Equipment } from "@shared/schema";
 import { cn } from "@/lib/utils";
 import {
@@ -30,12 +30,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
 export default function EquipmentList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState("50");
 
   const { data: equipment, isLoading } = useQuery<Equipment[]>({
     queryKey: ["/api/equipment"],
@@ -102,6 +111,13 @@ export default function EquipmentList() {
     return matchesSearch && matchesStatus;
   });
 
+  // Phân trang
+  const totalItems = filteredEquipment?.length || 0;
+  const totalPages = Math.ceil(totalItems / Number(itemsPerPage));
+  const startIndex = (currentPage - 1) * Number(itemsPerPage);
+  const endIndex = startIndex + Number(itemsPerPage);
+  const currentItems = filteredEquipment?.slice(startIndex, endIndex);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -165,6 +181,15 @@ export default function EquipmentList() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
+          <SelectTrigger className="w-32">
+            <SelectValue placeholder="Số mục hiển thị" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="50">50 mục</SelectItem>
+            <SelectItem value="100">100 mục</SelectItem>
+          </SelectContent>
+        </Select>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="gap-2">
@@ -198,7 +223,7 @@ export default function EquipmentList() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredEquipment?.map((item) => (
+            {currentItems?.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.equipmentId}</TableCell>
                 <TableCell>{item.equipmentName}</TableCell>
@@ -225,6 +250,31 @@ export default function EquipmentList() {
             ))}
           </TableBody>
         </Table>
+      </div>
+
+      {/* Phân trang */}
+      <div className="flex items-center justify-between">
+        <div className="text-sm text-gray-500">
+          Hiển thị {startIndex + 1}-{Math.min(endIndex, totalItems)} trên tổng số {totalItems} thiết bị
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(page => Math.max(1, page - 1))}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(page => Math.min(totalPages, page + 1))}
+            disabled={currentPage === totalPages}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );
