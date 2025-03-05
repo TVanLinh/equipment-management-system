@@ -3,22 +3,14 @@ import { cn } from "@/lib/utils";
 import { 
   LayoutDashboard, 
   Building2, 
-  Wrench,
-  ChevronLeft,
-  ChevronRight
+  Wrench
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Equipment } from "@shared/schema";
 
-interface SidebarProps {
-  onCollapse?: (collapsed: boolean) => void;
-}
-
-export default function Sidebar({ onCollapse }: SidebarProps) {
+export default function Sidebar() {
   const [location] = useLocation();
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -48,10 +40,6 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  const handleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
-    onCollapse?.(!isCollapsed);
-  };
 
   const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
     <Link href={href}>
@@ -70,63 +58,42 @@ export default function Sidebar({ onCollapse }: SidebarProps) {
 
   return (
     <div className={cn(
-      "bg-white border-r min-h-screen fixed top-0 left-0 transition-all duration-300 z-10",
-      isCollapsed ? "w-20" : "w-64",
+      "bg-white border-r min-h-screen fixed top-0 left-0 w-64 transition-all duration-300 z-10",
       isVisible ? "translate-x-0" : "-translate-x-full"
     )}>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute -right-4 top-6 h-8 w-8 rounded-full border bg-white"
-        onClick={handleCollapse}
-      >
-        {isCollapsed ? (
-          <ChevronRight className="h-4 w-4" />
-        ) : (
-          <ChevronLeft className="h-4 w-4" />
-        )}
-      </Button>
-
       <div className="p-4">
         <div className="mb-8">
-          <h1 className={cn(
-            "font-bold mb-6 transition-all duration-300",
-            isCollapsed ? "text-center text-sm" : "text-xl"
-          )}>
-            {isCollapsed ? "EMS" : "Quản lý Thiết bị"}
-          </h1>
+          <h1 className="text-xl font-bold mb-6">Quản lý Thiết bị</h1>
 
-          {!isCollapsed && (
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-2 text-green-600">
-                  <span className="text-2xl font-bold">{activeCount}</span>
-                </div>
-                <span className="text-sm text-gray-600">Đang hoạt động</span>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-2 text-green-600">
+                <span className="text-2xl font-bold">{activeCount}</span>
               </div>
-
-              <div className="p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-2 text-amber-600">
-                  <span className="text-2xl font-bold">{maintenanceCount}</span>
-                </div>
-                <span className="text-sm text-gray-600">Cần bảo trì</span>
-              </div>
+              <span className="text-sm text-gray-600">Đang hoạt động</span>
             </div>
-          )}
+
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-2 text-amber-600">
+                <span className="text-2xl font-bold">{maintenanceCount}</span>
+              </div>
+              <span className="text-sm text-gray-600">Cần bảo trì</span>
+            </div>
+          </div>
         </div>
 
         <nav className="space-y-1">
           <NavLink href="/">
             <LayoutDashboard size={20} />
-            {!isCollapsed && "Danh sách thiết bị"}
+            Danh sách thiết bị
           </NavLink>
           <NavLink href="/departments">
             <Building2 size={20} />
-            {!isCollapsed && "Phòng ban"}
+            Phòng ban
           </NavLink>
           <NavLink href="/maintenance">
             <Wrench size={20} />
-            {!isCollapsed && "Bảo trì"}
+            Bảo trì
           </NavLink>
         </nav>
       </div>

@@ -10,19 +10,12 @@ import EditEquipment from "@/pages/equipment/edit";
 import AddEquipment from "@/pages/equipment/add";
 import DepartmentList from "@/pages/departments/list";
 import MaintenanceList from "@/pages/maintenance/list";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 function Router() {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
   return (
     <div className="min-h-screen bg-background flex">
-      <Sidebar onCollapse={setIsSidebarCollapsed} />
-      <main className={cn(
-        "flex-1 p-8 transition-all duration-300",
-        isSidebarCollapsed ? "ml-20" : "ml-64"
-      )}>
+      <Sidebar />
+      <main className="flex-1 p-8 ml-64 transition-all duration-300">
         <Switch>
           <Route path="/" component={EquipmentList} />
           <Route path="/equipment/add" component={AddEquipment} />
