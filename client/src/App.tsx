@@ -2,7 +2,7 @@ import { Switch, Route } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
-import Navbar from "@/components/layout/navbar";
+import Sidebar from "@/components/layout/sidebar";
 import NotFound from "@/pages/not-found";
 import EquipmentList from "@/pages/equipment/list";
 import EquipmentDetails from "@/pages/equipment/details";
@@ -12,9 +12,9 @@ import MaintenanceList from "@/pages/maintenance/list";
 
 function Router() {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <main className="container mx-auto py-6 px-4">
+    <div className="min-h-screen bg-background flex">
+      <Sidebar />
+      <main className="flex-1 p-8">
         <Switch>
           <Route path="/" component={EquipmentList} />
           <Route path="/equipment/add" component={AddEquipment} />
