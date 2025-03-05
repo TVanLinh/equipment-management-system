@@ -1,4 +1,7 @@
 import { Department, Equipment, Maintenance, InsertDepartment, InsertEquipment, InsertMaintenance } from "@shared/schema";
+import fs from 'fs';
+import path from 'path';
+import { parse } from 'csv-parse/sync';
 
 export interface IStorage {
   // Departments
@@ -36,17 +39,21 @@ export class MemStorage implements IStorage {
   }
 
   private initializeSampleData() {
-    // Tạo một số phòng ban mẫu
-    const departments = [
-      { name: "Khoa Nội", code: "NOI" },
-      { name: "Khoa Ngoại", code: "NGO" },
-      { name: "Khoa Cấp cứu", code: "CC" },
-      { name: "Khoa Xét nghiệm", code: "XN" },
-      { name: "Khoa Chẩn đoán hình ảnh", code: "CDHA" }
-    ];
+    // Đọc dữ liệu phòng ban từ file CSV
+    const csvPath = path.join(process.cwd(), 'attached_assets', 'Copy of danhsach_khoa - danhsach_khoa.csv');
+    const csvContent = fs.readFileSync(csvPath, 'utf-8');
+    const records = parse(csvContent, {
+      columns: true,
+      skip_empty_lines: true
+    });
 
-    departments.forEach(dept => {
-      this.createDepartment(dept);
+    // Import các phòng ban từ CSV
+    records.forEach((record: any) => {
+      const department: InsertDepartment = {
+        name: record.ORG_NAME,
+        code: record.Department_CODE,
+      };
+      this.createDepartment(department);
     });
 
     // Danh sách loại thiết bị mẫu
@@ -88,7 +95,7 @@ export class MemStorage implements IStorage {
         status: ["Active", "Maintenance", "Inactive"][Math.floor(Math.random() * 3)],
         purchaseDate: purchaseDate.toISOString().split('T')[0],
         warrantyExpiry: warrantyExpiry.toISOString().split('T')[0],
-        departmentId: Math.floor(Math.random() * 5) + 1
+        departmentId: Math.floor(Math.random() * records.length) + 1
       };
 
       this.createEquipment(equipment);

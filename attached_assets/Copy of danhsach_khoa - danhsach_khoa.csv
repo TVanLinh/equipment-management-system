@@ -1,0 +1,54 @@
+Department_ID,Department_CODE,MAKHOABYT,ORG_NAME,ORG_TYPE
+6061,DNSKSS-KHHGD,K27.7,Khoa kế hoạch hóa gia đình,4027
+5941,DNDD,K45,Khoa Dinh Dưỡng,4045
+27720,DNNTM,K04,Đơn Nguyên Nội Tim Mạch,4004
+27721,DNTMH,K282930,Khoa liên chuyên khoa Tai mũi họng; Răng hàm mặt; Mắt,4028
+27722,DNRHM,K29,Đơn Nguyên Răng - Hàm - Mặt,4029
+27723,DNKM,K30,Đơn Nguyên Mắt,4030
+28100,HSTCSS,K18,HỒI SỨC TÍCH CỰC SƠ SINH,4018
+28325,GMHSDC,K26,Khoa Gây mê-HS Dã Chiến,4026
+28344,DT3,K27,Khoa Điều Trị 3,4003
+28345,DT4,K27,Khoa Điều Trị 4,4003
+28347,KTKRV,K27,Khoa Theo Dõi BN Trước Khi Ra Viện,4003
+28303,HSCCDC,K27,Khoa Hồi Sức Cấp Cứu Dã Chiến,4002
+28304,KSDC2,K27,Khoa Sản Dã Chiến,4027
+28308,XNDC,K47,Khoa Xét Nghiệm (Khai Quang),4047
+28328,KB,K01,Khoa Khám Bệnh (Khai Quang),4001
+29180,CNTT,K000,Phòng Công Nghệ Thông Tin,4000
+28342,DT2,K27,Khoa Điều Trị 2,4003
+28327,CDHADC,K39,Khoa Chẩn Đoán Hình Ảnh ( Khai Quang),4039
+5001,QTHT,K00,Quản trị hệ thống,4000
+5002,KBENH,K01,Khoa Khám bệnh,4001
+5003,HSCC,K48,KHOA HỒI SỨC TÍCH CỰC VÀ CHỐNG ĐỘC,4048
+5004,NOIN,K03,Khoa Nội Nhi,4003
+5005,TNHIEM,K11,Khoa Truyền nhiễm,4011
+5006,SS,K18.2,Khoa Sơ Sinh,4018
+5007,DNTC,K02,Khoa đơn nguyên tiêm chủng,4002
+5008,NGOAIN,K19,Khoa Ngoại Nhi,4019
+5009,CTCH,K24,Khoa Chấn Thương Chỉnh Hình,4024
+5010,GMHS,K26,Khoa Gây mê-HS,4026
+5011,DNHSSM,K26.1,Đơn Nguyên Hồi Sức Sau Mổ,4026
+5012,SAN,K27.1,Khoa Sản,4027
+5013,PHTSS,K27,Khoa Phụ,4027
+5014,SBENH,K27.2,Khoa Sản Bệnh,4027
+5015,HMUON,K27.3,Khoa hiếm muộn,4027
+5016,LCK,K28,Khoa Liên chuyên khoa,4028
+5017,HHOC,K36,Khoa huyết học - Truyền Máu,4036
+5018,DNVS,K38,Khoa Vi sinh,4038
+5019,SHOA,K37,Khoa Sinh Hóa,4037
+5020,CDHA,K39,Khoa Chẩn đoán hình ảnh,4039
+5021,KCNKHUAN,K43,Khoa Chống nhiễm khuẩn,4043
+5022,DUOC,K44,Khoa Dược,4044
+5023,PDD,K00,Phòng Điều dưỡng,4000
+5024,TCHC,K00,Phòng Tổ chức hành chính,4000
+5025,KHTH,K00,Kế hoạch tổng hợp,4000
+5026,BGĐ,K00,Ban giám đốc,4000
+5027,TCKT,K00,Phòng Tài chính kế toán,4000
+5028,DNHH,K50,Khoa Hô Hấp,4050
+29222,KST1,K27.4,KHOA SẢN THƯỜNG,4027
+29220,HCC,K02,KHOA CẤP CỨU,4002
+29200,CNKDC,,Khoa Chống Nhiễm Khuẩn Dã Chiến,4043
+29400,QLCL,,Phòng Quản Lý Chất Lượng,4000
+32520,THHTS01,K27.3,Trung tâm Hỗ trợ sinh sản,4027
+31300,K03.1,K03.1,Đơn Nguyên Tâm Bệnh - Phục Hồi Chức Năng,4003
+33800,VTTTB,K00,Phòng Vật Tư Trang Thiết Bị Y Tế,4000
