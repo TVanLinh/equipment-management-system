@@ -5,14 +5,11 @@ import {
   Building2, 
   Wrench
 } from "lucide-react";
-import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { Equipment } from "@shared/schema";
 
 export default function Sidebar() {
   const [location] = useLocation();
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
 
   const { data: equipment } = useQuery<Equipment[]>({
     queryKey: ["/api/equipment"],
@@ -21,25 +18,6 @@ export default function Sidebar() {
   // Tính toán số lượng thiết bị theo trạng thái
   const activeCount = equipment?.filter(item => item.status === "Active").length || 0;
   const maintenanceCount = equipment?.filter(item => item.status === "Maintenance").length || 0;
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      if (currentScrollY < 10) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(currentScrollY < lastScrollY);
-      }
-
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
-
 
   const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
     <Link href={href}>
@@ -57,10 +35,7 @@ export default function Sidebar() {
   );
 
   return (
-    <div className={cn(
-      "bg-white border-r min-h-screen fixed top-0 left-0 w-64 transition-all duration-300 z-10",
-      isVisible ? "translate-x-0" : "-translate-x-full"
-    )}>
+    <div className="bg-white border-r min-h-screen fixed top-0 left-0 w-64">
       <div className="p-4">
         <div className="mb-8">
           <h1 className="text-xl font-bold mb-6">Quản lý Thiết bị</h1>
