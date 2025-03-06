@@ -6,6 +6,7 @@ import multer from "multer";
 import xlsx from "xlsx";
 import session from 'express-session';
 import { z } from "zod";
+import { parse } from 'csv-parse'; // Assuming csv-parse is used
 
 declare module 'express-session' {
   interface SessionData {
@@ -433,11 +434,28 @@ export async function registerRoutes(app: Express) {
         return res.status(400).json({ error: "Chưa chọn file để import" });
       }
 
-      const workbook = xlsx.read(req.file.buffer);
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const data = xlsx.utils.sheet_to_json(worksheet);
+      let data;
+      if (req.file.mimetype === "text/csv") {
+        // Đọc file CSV với encoding UTF-8
+        const csvContent = req.file.buffer.toString('utf-8');
+        // Parse CSV thành JSON
+        data = await new Promise((resolve, reject) => {
+          parse(csvContent, {
+            columns: true,
+            skip_empty_lines: true
+          }, (err, result) => {
+            if (err) reject(err);
+            else resolve(result);
+          });
+        });
+      } else {
+        // Đọc file Excel
+        const workbook = xlsx.read(req.file.buffer);
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        data = xlsx.utils.sheet_to_json(worksheet);
+      }
 
-      console.log('Dữ liệu từ file Excel:', data);
+      console.log('Dữ liệu từ file:', data);
 
       const results = [];
       const errors = [];
