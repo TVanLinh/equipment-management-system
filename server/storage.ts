@@ -1,7 +1,5 @@
 import { Department, Equipment, Maintenance, User, InsertDepartment, InsertEquipment, InsertMaintenance, InsertUser } from "@shared/schema";
-import fs from 'fs';
-import path from 'path';
-import { parse } from 'csv-parse/sync';
+import { query } from './db';
 
 export interface IStorage {
   // Departments
@@ -28,232 +26,142 @@ export interface IStorage {
   updateUser(id: number, updates: Partial<InsertUser>): Promise<User>;
 }
 
-export class MemStorage implements IStorage {
-  private departments: Map<number, Department>;
-  private equipment: Map<number, Equipment>;
-  private maintenance: Map<number, Maintenance>;
-  private users: Map<number, User>;
-  private departmentId: number = 1;
-  private equipmentId: number = 1;
-  private maintenanceId: number = 1;
-  private userId: number = 1;
-
-  constructor() {
-    this.departments = new Map();
-    this.equipment = new Map();
-    this.maintenance = new Map();
-    this.users = new Map();
-
-    // Khởi tạo dữ liệu mẫu
-    this.initializeSampleData();
-  }
-
-  private initializeSampleData() {
-    // Đọc dữ liệu phòng ban từ file CSV
-    const csvPath = path.join(process.cwd(), 'attached_assets', 'Copy of danhsach_khoa - danhsach_khoa.csv');
-    const csvContent = fs.readFileSync(csvPath, 'utf-8');
-    const records = parse(csvContent, {
-      columns: true,
-      skip_empty_lines: true
-    });
-
-    // Import các phòng ban từ CSV
-    records.forEach((record: any) => {
-      const department: InsertDepartment = {
-        name: record.ORG_NAME,
-        code: record.Department_CODE,
-      };
-      this.createDepartment(department);
-    });
-
-    // Tìm ID của Phòng Vật Tư và Ban giám đốc
-    const vtttbDept = Array.from(this.departments.values()).find(d => d.code === 'VTTTB');
-    const bgdDept = Array.from(this.departments.values()).find(d => d.code === 'BGĐ');
-
-    if (vtttbDept) {
-      // Admin user cho Phòng Vật Tư
-      this.createUser({
-        username: 'admin',
-        password: 'admin123',
-        fullName: 'Administrator',
-        departmentId: vtttbDept.id,
-        role: 'admin'
-      });
-    }
-
-    if (bgdDept) {
-      // Manager user cho Ban giám đốc
-      this.createUser({
-        username: 'manager',
-        password: 'manager123',
-        fullName: 'Manager',
-        departmentId: bgdDept.id,
-        role: 'manager'
-      });
-    }
-
-    // Tạo user cho các khoa còn lại
-    Array.from(this.departments.values())
-      .filter(d => d.id !== vtttbDept?.id && d.id !== bgdDept?.id)
-      .forEach(dept => {
-        this.createUser({
-          username: dept.code.toLowerCase(),
-          password: 'user123',
-          fullName: dept.name,
-          departmentId: dept.id,
-          role: 'user'
-        });
-      });
-
-    // Create sample equipment
-    for (let i = 1; i <= 50; i++) {
-      const purchaseDate = new Date(2020 + Math.floor(Math.random() * 4), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28));
-      const warrantyYears = Math.floor(Math.random() * 3) + 2;
-      const warrantyExpiry = new Date(purchaseDate);
-      warrantyExpiry.setFullYear(warrantyExpiry.getFullYear() + warrantyYears);
-
-      const equipment: InsertEquipment = {
-        equipmentId: `MD${String(i).padStart(3, '0')}`,
-        equipmentName: `Thiết bị ${Math.floor(Math.random() * 1000)}`,
-        equipmentType: ["Chẩn đoán hình ảnh", "Phẫu thuật", "Xét nghiệm", "Theo dõi bệnh nhân", "Hồi sức cấp cứu"][Math.floor(Math.random() * 5)],
-        model: `Model-${Math.floor(Math.random() * 9000) + 1000}`,
-        serialNumber: `SN${Math.floor(Math.random() * 90000) + 10000}`,
-        countryOfOrigin: ["Đức", "Nhật Bản", "Hàn Quốc", "Mỹ", "Trung Quốc"][Math.floor(Math.random() * 5)],
-        manufacturer: ["Siemens", "Phillips", "GE Healthcare", "Toshiba", "Samsung Medison"][Math.floor(Math.random() * 5)],
-        unitPrice: String(Math.floor(Math.random() * 900000000) + 100000000),
-        vat: String(Math.floor(Math.random() * 3) * 5 + 5), // 5%, 10%, or 15%
-        fundingSource: ["Ngân sách nhà nước", "Viện trợ", "Vốn vay"][Math.floor(Math.random() * 3)],
-        supplier: ["Công ty ABC", "Công ty XYZ", "Công ty Medical", "Công ty Healthcare"][Math.floor(Math.random() * 4)],
-        status: ["Active", "Maintenance", "Inactive"][Math.floor(Math.random() * 3)],
-        purchaseDate: purchaseDate.toISOString().split('T')[0],
-        warrantyExpiry: warrantyExpiry.toISOString().split('T')[0],
-        departmentId: Math.floor(Math.random() * records.length) + 1
-      };
-
-      const createdEquipment = this.createEquipment(equipment);
-
-      // Tạo lịch sử bảo trì mẫu cho thiết bị
-      const numMaintenance = Math.floor(Math.random() * 3) + 1; // 1-3 lần bảo trì
-      for (let j = 0; j < numMaintenance; j++) {
-        const startDate = new Date(purchaseDate);
-        startDate.setMonth(startDate.getMonth() + Math.floor(Math.random() * 12));
-        const endDate = new Date(startDate);
-        endDate.setDate(endDate.getDate() + Math.floor(Math.random() * 7) + 1);
-
-        const maintenance: InsertMaintenance = {
-          equipmentId: createdEquipment.id,
-          startDate: startDate.toISOString().split('T')[0],
-          endDate: endDate.toISOString().split('T')[0],
-          maintenanceType: ["Định kỳ", "Sửa chữa", "Kiểm định"][Math.floor(Math.random() * 3)],
-          status: ["Completed", "In Progress", "Scheduled"][Math.floor(Math.random() * 3)],
-          performedBy: ["Kỹ thuật viên A", "Kỹ thuật viên B", "Công ty bảo trì XYZ"][Math.floor(Math.random() * 3)],
-          notes: ["Bảo dưỡng định kỳ", "Thay thế linh kiện", "Sửa chữa sự cố", "Kiểm định an toàn"][Math.floor(Math.random() * 4)]
-        };
-
-        this.createMaintenance(maintenance);
-      }
-    }
-  }
-
-  // Department methods
+export class MySQLStorage implements IStorage {
+  // Departments
   async getDepartments(): Promise<Department[]> {
-    return Array.from(this.departments.values());
+    const departments = await query('SELECT * FROM departments');
+    return departments as Department[];
   }
 
   async getDepartment(id: number): Promise<Department | undefined> {
-    return this.departments.get(id);
+    const [department] = await query('SELECT * FROM departments WHERE id = ?', [id]);
+    return department as Department | undefined;
   }
 
   async createDepartment(department: InsertDepartment): Promise<Department> {
-    const id = this.departmentId++;
-    const newDepartment = { ...department, id };
-    this.departments.set(id, newDepartment);
-    return newDepartment;
+    const result = await query(
+      'INSERT INTO departments (name, code) VALUES (?, ?)',
+      [department.name, department.code]
+    );
+    return { ...department, id: result.insertId };
   }
 
-  // Equipment methods
+  // Equipment
   async getEquipment(): Promise<Equipment[]> {
-    return Array.from(this.equipment.values());
+    const equipment = await query('SELECT * FROM equipment');
+    return equipment as Equipment[];
   }
 
   async getEquipmentById(id: number): Promise<Equipment | undefined> {
-    return this.equipment.get(id);
+    const [equipment] = await query('SELECT * FROM equipment WHERE id = ?', [id]);
+    return equipment as Equipment | undefined;
   }
 
   async createEquipment(equipment: InsertEquipment): Promise<Equipment> {
-    const id = this.equipmentId++;
-    const newEquipment = {
-      ...equipment,
-      id,
-      unitPrice: equipment.unitPrice.toString(),
-      vat: equipment.vat.toString(),
-      departmentId: equipment.departmentId || null
-    };
-    this.equipment.set(id, newEquipment);
-    return newEquipment;
+    const result = await query(
+      `INSERT INTO equipment (
+        equipmentId, equipmentName, equipmentType, model, serialNumber,
+        countryOfOrigin, manufacturer, unitPrice, vat, fundingSource,
+        supplier, status, purchaseDate, warrantyExpiry, departmentId
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        equipment.equipmentId,
+        equipment.equipmentName,
+        equipment.equipmentType,
+        equipment.model,
+        equipment.serialNumber,
+        equipment.countryOfOrigin,
+        equipment.manufacturer,
+        equipment.unitPrice,
+        equipment.vat,
+        equipment.fundingSource,
+        equipment.supplier,
+        equipment.status || 'Active',
+        equipment.purchaseDate,
+        equipment.warrantyExpiry,
+        equipment.departmentId
+      ]
+    );
+    return { ...equipment, id: result.insertId };
   }
 
   async updateEquipment(id: number, updates: Partial<InsertEquipment>): Promise<Equipment> {
-    const existing = this.equipment.get(id);
-    if (!existing) throw new Error("Equipment not found");
+    const setClause = Object.keys(updates)
+      .map(key => `${key} = ?`)
+      .join(', ');
+    const values = [...Object.values(updates), id];
 
-    const updated = { ...existing, ...updates };
-    this.equipment.set(id, updated);
-    return updated;
+    await query(`UPDATE equipment SET ${setClause} WHERE id = ?`, values);
+    const [updated] = await query('SELECT * FROM equipment WHERE id = ?', [id]);
+    if (!updated) throw new Error("Equipment not found");
+    return updated as Equipment;
   }
 
-  // Maintenance methods
+  // Maintenance
   async getMaintenance(): Promise<Maintenance[]> {
-    return Array.from(this.maintenance.values());
+    const maintenance = await query('SELECT * FROM maintenance');
+    return maintenance as Maintenance[];
   }
 
   async getMaintenanceByEquipment(equipmentId: number): Promise<Maintenance[]> {
-    return Array.from(this.maintenance.values()).filter(m => m.equipmentId === equipmentId);
+    const maintenance = await query('SELECT * FROM maintenance WHERE equipmentId = ?', [equipmentId]);
+    return maintenance as Maintenance[];
   }
 
   async createMaintenance(maintenance: InsertMaintenance): Promise<Maintenance> {
-    const id = this.maintenanceId++;
-    const newMaintenance = {
-      ...maintenance,
-      id,
-      equipmentId: maintenance.equipmentId || null,
-      notes: maintenance.notes || null
-    };
-    this.maintenance.set(id, newMaintenance);
-    return newMaintenance;
+    const result = await query(
+      `INSERT INTO maintenance (
+        equipmentId, startDate, endDate, maintenanceType,
+        status, performedBy, notes
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        maintenance.equipmentId,
+        maintenance.startDate,
+        maintenance.endDate,
+        maintenance.maintenanceType,
+        maintenance.status || 'Scheduled',
+        maintenance.performedBy,
+        maintenance.notes
+      ]
+    );
+    return { ...maintenance, id: result.insertId };
   }
 
-  // User methods
+  // Users
   async getUsers(): Promise<User[]> {
-    return Array.from(this.users.values());
+    const users = await query('SELECT * FROM users');
+    return users as User[];
   }
 
   async getUserById(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await query('SELECT * FROM users WHERE id = ?', [id]);
+    return user as User | undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(u => u.username === username);
+    const [user] = await query('SELECT * FROM users WHERE username = ?', [username]);
+    return user as User | undefined;
   }
 
   async createUser(user: InsertUser): Promise<User> {
-    const id = this.userId++;
-    const newUser = {
-      ...user,
-      id,
-      departmentId: user.departmentId || null
-    };
-    this.users.set(id, newUser);
-    return newUser;
+    const result = await query(
+      'INSERT INTO users (username, password, fullName, role, departmentId) VALUES (?, ?, ?, ?, ?)',
+      [user.username, user.password, user.fullName, user.role || 'user', user.departmentId]
+    );
+    return { ...user, id: result.insertId };
   }
-  async updateUser(id: number, updates: Partial<InsertUser>): Promise<User> {
-    const existing = this.users.get(id);
-    if (!existing) throw new Error("User not found");
 
-    const updated = { ...existing, ...updates };
-    this.users.set(id, updated);
-    return updated;
+  async updateUser(id: number, updates: Partial<InsertUser>): Promise<User> {
+    const setClause = Object.keys(updates)
+      .map(key => `${key} = ?`)
+      .join(', ');
+    const values = [...Object.values(updates), id];
+
+    await query(`UPDATE users SET ${setClause} WHERE id = ?`, values);
+    const [updated] = await query('SELECT * FROM users WHERE id = ?', [id]);
+    if (!updated) throw new Error("User not found");
+    return updated as User;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new MySQLStorage();
