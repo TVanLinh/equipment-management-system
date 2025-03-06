@@ -399,7 +399,7 @@ export async function registerRoutes(app: Express) {
         username: "user123",
         password: "password123",
         fullName: "Nguyễn Văn A",
-        role: "user", 
+        role: "user",
         departmentId: 1
       }
     ];
@@ -443,12 +443,21 @@ export async function registerRoutes(app: Express) {
       const errors = [];
       let rowNumber = 2; // Bắt đầu từ dòng 2 (sau header)
 
+      // Lấy danh sách phòng ban để map code sang id
+      const departments = await storage.getDepartments();
+
       for (const row of data as Record<string, unknown>[]) {
         try {
           console.log(`Đang xử lý dòng ${rowNumber}:`, row);
 
+          // Xử lý các trường dữ liệu, hỗ trợ nhiều tên cột khác nhau
+          const username = String(row.username || '').trim();
+          const password = String(row.password || '').trim();
+          const fullName = String(row.full_name || row.fullName || '').trim();
+          const role = String(row.role || 'user').trim().toLowerCase();
+
           // Validate các trường bắt buộc
-          if (!row.username || !row.password || !row.fullName) {
+          if (!username || !password || !fullName) {
             errors.push({
               row: rowNumber,
               data: row,
@@ -459,7 +468,6 @@ export async function registerRoutes(app: Express) {
           }
 
           // Validate role
-          const role = String(row.role || 'user').trim().toLowerCase();
           if (!['admin', 'manager', 'user'].includes(role)) {
             errors.push({
               row: rowNumber,
@@ -470,52 +478,42 @@ export async function registerRoutes(app: Express) {
             continue;
           }
 
-          // Kiểm tra và chuyển đổi departmentId
-          let departmentId = null;
-          if (row.departmentId) {
-            const deptId = Number(row.departmentId);
-            if (isNaN(deptId)) {
-              errors.push({
-                row: rowNumber,
-                data: row,
-                error: `Dòng ${rowNumber}: Department ID phải là số`
-              });
-              rowNumber++;
-              continue;
-            }
-
-            // Kiểm tra department có tồn tại
-            const department = await storage.getDepartment(deptId);
-            if (!department) {
-              errors.push({
-                row: rowNumber,
-                data: row,
-                error: `Dòng ${rowNumber}: Phòng ban với ID ${deptId} không tồn tại`
-              });
-              rowNumber++;
-              continue;
-            }
-            departmentId = deptId;
-          }
-
           // Kiểm tra username đã tồn tại
-          const existingUser = await storage.getUserByUsername(String(row.username));
+          const existingUser = await storage.getUserByUsername(username);
           if (existingUser) {
             errors.push({
               row: rowNumber,
               data: row,
-              error: `Dòng ${rowNumber}: Username "${row.username}" đã tồn tại`
+              error: `Dòng ${rowNumber}: Username "${username}" đã tồn tại`
             });
             rowNumber++;
             continue;
           }
 
+          // Xử lý department ID
+          let departmentId = null;
+          const deptCode = String(row.department_id || row.departmentId || '').trim();
+          if (deptCode) {
+            // Tìm department theo mã
+            const department = departments.find(d => d.code === deptCode);
+            if (!department) {
+              errors.push({
+                row: rowNumber,
+                data: row,
+                error: `Dòng ${rowNumber}: Không tìm thấy phòng ban với mã "${deptCode}"`
+              });
+              rowNumber++;
+              continue;
+            }
+            departmentId = department.id;
+          }
+
           const userData = {
-            username: String(row.username).trim(),
-            password: String(row.password).trim(),
-            fullName: String(row.fullName).trim(),
-            role: role,
-            departmentId: departmentId
+            username,
+            password,
+            fullName,
+            role,
+            departmentId
           };
 
           console.log(`Dữ liệu người dùng đã chuyển đổi dòng ${rowNumber}:`, userData);
@@ -583,7 +581,7 @@ export async function registerRoutes(app: Express) {
   app.get("/user-template.csv", requireAuth, requireAdminOrManager, (_req, res) => {
     const headers = [
       "username",
-      "password", 
+      "password",
       "fullName",
       "role",
       "departmentId"

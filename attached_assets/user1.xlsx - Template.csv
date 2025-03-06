@@ -1,0 +1,72 @@
+username,full_name,password,role,department_id
+anhhn,Hoàng Ngọc Anh,password123,user,HCC
+thuydt,Đỗ Thị Thúy,password123,user,KBENH
+thanhth,Trần Hồng Thanh,password123,user,KBENH
+huyenvt,Vũ Thị Huyền,password123,user,KHTH
+khoanv,Nguyễn Văn Khoa,password123,user,KCNKHUAN
+haihm,Hoàng Minh Hải,password123,user,PHTSS
+trantrung,Trần Trung,password123,user,QLCL
+hoangtv,Trần Văn Hoằng,password123,user,HHOC
+thaonh,Nguyễn Hữu Thảo,password123,user,HSCC
+hangltt,Lê Thị Thu Hằng,password123,user,NGOAIN
+landt,Đinh Thị Lan,password123,user,DNHH
+lannt,Nguyễn Ngọc Lan,password123,user,QTHT
+nhungnt,Nguyễn Thị Nhung,password123,user,TNHIEM
+thent,Nghiêm Trần Thế,password123,user,NOIN
+nhannv,Nguyễn Văn Nhân,password123,user,TCKT
+trungnv,Nguyễn Văn Trung,password123,user,TCKT
+ledinhdai,Lê Đình Đại,password123,user,TCKT
+quyettv,Tạ Văn Quyết,password123,user,TNHIEM
+ngocnt1,Nguyễn Thanh Ngọc,password123,user,BGĐ
+tuancv,Chu Văn Tuấn,password123,user,CDHA
+tuannv,Nguyễn Văn Tuấn,password123,user,CDHA
+hanhptl,Phạm Thị Lan Hạnh,password123,user,DUOC
+anhptl,Phạm Thị Lan Anh,password123,admin,DUOC
+phudt,Đào Thanh Phú,password123,user,DUOC
+luytv,Trần Văn Lũy,password123,user,GMHS
+ngalt,Lưu Tố Nga,password123,user,KCNKHUAN
+landtm,Đào Thị Mai Lan,password123,user,DNHH
+huyenntt,Nguyễn Thị Thu Huyền,password123,user,PDD
+ducpm,Phan Minh Đức,password123,user,KST1
+minhnd,Nguyễn Đức Minh,password123,user,PHTSS
+thopt,Phạm Tiến Thọ,password123,user,SAN
+quannv,Nguyễn Văn Quán,password123,user,BGĐ
+luonghb,Hoàng Bích Lương,password123,user,DNVS
+adminkv1,Quản trị hệ thống,password123,user,QTHT
+taivh,Vũ Hữu Tài,password123,admin,CNTT
+tuanld,Lê Đình Tuấn,password123,user,GMHS
+tungnt1,Nguyễn Thanh Tùng,password123,user,KBENH
+hungnm,Nguyễn Mạnh Hùng,password123,user,TNHIEM
+huyennt1,Nguyễn Thị Huyền,password123,user,DNDD
+hanh,Nguyễn Hoàng Hà,password123,user,THHTS01
+quangvn,Vũ Ngọc Quang,password123,user,DNSKSS-KHHGD
+thangnd,Nguyễn Đức Thắng,password123,user,NGOAIN
+hanhdt,Đỗ Thị Hạnh,password123,user,HCC
+tungnt2,Nguyễn Thanh Tùng,password123,user,PHTSS
+tuanlm,Lê Minh Tuấn,password123,user,NGOAIN
+admin,QTHT,password123,user,QTHT
+nuongtt,Trần Thị Nương,password123,user,K03.1
+phuocpq,Phạm Quang Phước,password123,user,CTCH
+antv,Tô Văn An,password123,user,SBENH
+canhbv,Bùi Văn Cảnh,password123,user,SAN
+haltt,Lê Thị Thái Hà,password123,user,SHOA
+haidv,Đặng Văn Hải,password123,user,BGĐ
+anhnt1,Ngô Tuyết Anh,password123,user,LCK
+phanbv,Bạch Văn Phấn,password123,user,SS
+duadt,Đỗ Thị Dừa,password123,user,NOIN
+thuynt5,Nguyễn Thu Thủy,password123,user,BGĐ
+ngocdt,Đặng Tiến Ngọc,password123,user,KBENH
+quanph,Phạm Hồng Quân,password123,user,CTCH
+adminvpc,Admin VPC,password123,user,QTHT
+anhtn,Trương Ngọc Ánh,password123,user,THHTS01
+minhpth,Phùng Thị Hải Minh,password123,user,SAN
+thaopth,Phùng Thị Hương Thảo,password123,user,SS
+hungtq,Tô Quang Hưng,password123,admin,BGĐ
+bang,Trương Xuân Bang,password123,user,DNTMH
+phuongdv,Đỗ Việt Phương,password123,user,CDHA
+tamptt,Phùng Thị Thanh Tâm,password123,user,KST1
+tuanpv,Phạm Văn Tuấn,password123,user,DNTMH
+dungbt,Bùi Tiến Dũng,password123,user,GMHS
+haovt,Vũ Thị Hảo,password123,user,BGĐ
+thanhht,Hoàng Trung Thanh,password123,user,HCC
+honglinhnt,Nguyễn Thị Hồng Linh,password123,user,KHTH
