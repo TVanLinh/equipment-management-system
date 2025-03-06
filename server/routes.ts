@@ -425,11 +425,15 @@ export async function registerRoutes(app: Express) {
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const data = xlsx.utils.sheet_to_json(worksheet);
 
+      console.log('Import data:', data); // Log data để debug
+
       const results = [];
       const errors = [];
 
       for (const row of data as Record<string, unknown>[]) {
         try {
+          console.log('Processing row:', row); // Log từng dòng để debug
+
           // Convert departmentId safely
           let departmentId = null;
           if (row.departmentId !== undefined && row.departmentId !== null) {
@@ -446,6 +450,8 @@ export async function registerRoutes(app: Express) {
             role: String(row.role || 'user').trim(),
             departmentId: departmentId
           };
+
+          console.log('Converted user data:', user); // Log dữ liệu sau khi chuyển đổi
 
           // Validate required fields
           if (!user.username || !user.password || !user.fullName) {
@@ -467,6 +473,7 @@ export async function registerRoutes(app: Express) {
 
           const result = insertUserSchema.safeParse(user);
           if (!result.success) {
+            console.log('Schema validation errors:', result.error.errors); // Log lỗi validation
             errors.push({
               row: user,
               errors: result.error.errors,
@@ -499,12 +506,19 @@ export async function registerRoutes(app: Express) {
           const savedUser = await storage.createUser(result.data);
           results.push(savedUser);
         } catch (error) {
+          console.error('Error processing row:', error); // Log lỗi chi tiết
           errors.push({
             row,
             error: error instanceof Error ? error.message : "Unknown error",
           });
         }
       }
+
+      // Log kết quả cuối cùng
+      console.log('Import results:', {
+        imported: results.length,
+        errors: errors.length ? errors : undefined
+      });
 
       res.json({
         success: true,
