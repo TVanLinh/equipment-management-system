@@ -130,7 +130,28 @@ export class MemStorage implements IStorage {
         departmentId: Math.floor(Math.random() * records.length) + 1
       };
 
-      this.createEquipment(equipment);
+      const createdEquipment = this.createEquipment(equipment);
+
+      // Tạo lịch sử bảo trì mẫu cho thiết bị
+      const numMaintenance = Math.floor(Math.random() * 3) + 1; // 1-3 lần bảo trì
+      for (let j = 0; j < numMaintenance; j++) {
+        const startDate = new Date(purchaseDate);
+        startDate.setMonth(startDate.getMonth() + Math.floor(Math.random() * 12));
+        const endDate = new Date(startDate);
+        endDate.setDate(endDate.getDate() + Math.floor(Math.random() * 7) + 1);
+
+        const maintenance: InsertMaintenance = {
+          equipmentId: createdEquipment.id,
+          startDate: startDate.toISOString().split('T')[0],
+          endDate: endDate.toISOString().split('T')[0],
+          maintenanceType: ["Định kỳ", "Sửa chữa", "Kiểm định"][Math.floor(Math.random() * 3)],
+          status: ["Completed", "In Progress", "Scheduled"][Math.floor(Math.random() * 3)],
+          performedBy: ["Kỹ thuật viên A", "Kỹ thuật viên B", "Công ty bảo trì XYZ"][Math.floor(Math.random() * 3)],
+          notes: ["Bảo dưỡng định kỳ", "Thay thế linh kiện", "Sửa chữa sự cố", "Kiểm định an toàn"][Math.floor(Math.random() * 4)]
+        };
+
+        this.createMaintenance(maintenance);
+      }
     }
   }
 
