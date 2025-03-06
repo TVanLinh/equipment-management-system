@@ -16,7 +16,7 @@ declare module 'express-session' {
 const upload = multer({
   storage: multer.memoryStorage(),
   fileFilter: (_req, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-    if (file.mimetype === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || 
+    if (file.mimetype === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
         file.mimetype === "text/csv") {
       cb(null, true);
     } else {
@@ -49,7 +49,7 @@ export async function registerRoutes(app: Express) {
       secret: 'your-secret-key',
       resave: false,
       saveUninitialized: false,
-      cookie: { 
+      cookie: {
         secure: false, // Set to true if using HTTPS
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
       }
@@ -70,7 +70,7 @@ export async function registerRoutes(app: Express) {
       }
 
       req.session.userId = user.id;
-      res.json({ 
+      res.json({
         id: user.id,
         username: user.username,
         role: user.role,
@@ -310,7 +310,7 @@ export async function registerRoutes(app: Express) {
   app.get("/template.csv", requireAuth, (_req, res) => {
     const headers = [
       "equipment_id",
-      "equipment_name", 
+      "equipment_name",
       "equipment_type",
       "model",
       "serial_number",
@@ -389,6 +389,93 @@ export async function registerRoutes(app: Express) {
       res.json(updatedUser);
     } catch (error) {
       res.status(500).json({ error: "Failed to reset password" });
+    }
+  });
+
+  // Thêm route mới cho user template và import
+  app.get("/user-template.xlsx", requireAuth, requireAdminOrManager, (_req, res) => {
+    const template = [
+      {
+        username: "user123",
+        password: "password123",
+        full_name: "Nguyễn Văn A",
+        role: "user",
+        department_id: "1"
+      }
+    ];
+
+    const wb = xlsx.utils.book_new();
+    const ws = xlsx.utils.json_to_sheet(template);
+    xlsx.utils.book_append_sheet(wb, ws, "Template");
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=user-template.xlsx');
+
+    const buffer = xlsx.write(wb, { type: 'buffer', bookType: 'xlsx' });
+    res.send(buffer);
+  });
+
+  app.post("/api/users/import", requireAuth, requireAdminOrManager, upload.single('file'), async (req: Request & { file?: Express.Multer.File }, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+
+      const workbook = xlsx.read(req.file.buffer);
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const data = xlsx.utils.sheet_to_json(worksheet);
+
+      const results = [];
+      const errors = [];
+
+      for (const row of data as Record<string, unknown>[]) {
+        try {
+          const user = {
+            username: String(row.username || ''),
+            password: String(row.password || ''),
+            fullName: String(row.full_name || row.fullName || ''),
+            role: String(row.role || 'user'),
+            departmentId: Number(row.department_id || row.departmentId || null)
+          };
+
+          const result = insertUserSchema.safeParse(user);
+          if (!result.success) {
+            errors.push({
+              row: user,
+              errors: result.error.errors,
+            });
+            continue;
+          }
+
+          // Kiểm tra username đã tồn tại chưa
+          const existingUser = await storage.getUserByUsername(user.username);
+          if (existingUser) {
+            errors.push({
+              row: user,
+              error: "Username đã tồn tại",
+            });
+            continue;
+          }
+
+          const savedUser = await storage.createUser(result.data);
+          results.push(savedUser);
+        } catch (error) {
+          errors.push({
+            row,
+            error: error instanceof Error ? error.message : "Unknown error",
+          });
+        }
+      }
+
+      res.json({
+        success: true,
+        imported: results.length,
+        errors: errors.length ? errors : undefined,
+      });
+    } catch (error) {
+      res.status(400).json({
+        error: error instanceof Error ? error.message : "Failed to process file",
+      });
     }
   });
 

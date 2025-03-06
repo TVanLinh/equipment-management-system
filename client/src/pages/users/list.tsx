@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, KeyRound, Search } from "lucide-react";
+import { Plus, KeyRound, Search, Upload, Download } from "lucide-react";
 import type { User, Department } from "@shared/schema";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -20,7 +20,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -39,6 +38,7 @@ export default function UserList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -75,9 +75,47 @@ export default function UserList() {
     },
   });
 
+  const importMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/users/import', {
+        method: 'POST',
+        body: formData,
+      });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Import thành công",
+        description: `Đã import ${data.imported} người dùng.${data.errors?.length ? ` Có ${data.errors.length} lỗi.` : ''}`,
+      });
+      setIsImportDialogOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["/api/users"] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Lỗi",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleResetPassword = (userId: number) => {
     setSelectedUserId(userId);
     setIsResetPasswordOpen(true);
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      importMutation.mutate(file);
+    }
+  };
+
+  const handleDownloadTemplate = () => {
+    window.location.href = '/user-template.xlsx';
   };
 
   const filteredUsers = users?.filter((user) =>
@@ -100,12 +138,22 @@ export default function UserList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Danh sách người dùng</h1>
-        <Link href="/users/add">
-          <Button className="bg-pink-500 hover:bg-pink-600">
-            <Plus className="mr-2 h-4 w-4" />
-            Thêm người dùng
+        <div className="flex gap-2">
+          <Button onClick={handleDownloadTemplate} variant="outline" className="gap-2">
+            <Download className="h-4 w-4" />
+            Tải template
           </Button>
-        </Link>
+          <Button onClick={() => setIsImportDialogOpen(true)} variant="outline" className="gap-2">
+            <Upload className="h-4 w-4" />
+            Import
+          </Button>
+          <Link href="/users/add">
+            <Button className="bg-pink-500 hover:bg-pink-600">
+              <Plus className="mr-2 h-4 w-4" />
+              Thêm người dùng
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="flex gap-4 mb-6">
@@ -200,6 +248,28 @@ export default function UserList() {
               </Button>
             </form>
           </Form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Import người dùng</DialogTitle>
+            <DialogDescription>
+              Chọn file Excel để import danh sách người dùng
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={handleFileUpload}
+              disabled={importMutation.isPending}
+            />
+            <p className="text-sm text-gray-500">
+              Tải template mẫu để xem cấu trúc file import
+            </p>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
