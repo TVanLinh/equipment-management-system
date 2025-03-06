@@ -193,20 +193,20 @@ export async function registerRoutes(app: Express) {
       for (const row of data as Record<string, unknown>[]) {
         try {
           const equipment = {
-            equipmentId: String(row.equipment_id || row.equipmentId || ''),
-            equipmentName: String(row.equipment_name || row.equipmentName || ''),
-            equipmentType: String(row.equipment_type || row.equipmentType || ''),
-            model: String(row.model || ''),
-            serialNumber: String(row.serial_number || row.serialNumber || ''),
-            countryOfOrigin: String(row.country_of_origin || row.countryOfOrigin || ''),
-            manufacturer: String(row.manufacturer || ''),
-            unitPrice: String(row.unit_price || row.unitPrice || '0'),
-            vat: String(row.vat || '0'),
-            fundingSource: String(row.funding_source || row.fundingSource || ''),
-            supplier: String(row.supplier || ''),
-            status: String(row.status || 'Active'),
-            purchaseDate: String(row.purchase_date || row.purchaseDate || new Date().toISOString().split('T')[0]),
-            warrantyExpiry: String(row.warranty_expiry || row.warrantyExpiry || new Date().toISOString().split('T')[0]),
+            equipmentId: String(row.equipment_id || row.equipmentId || '').trim(),
+            equipmentName: String(row.equipment_name || row.equipmentName || '').trim(),
+            equipmentType: String(row.equipment_type || row.equipmentType || '').trim(),
+            model: String(row.model || '').trim(),
+            serialNumber: String(row.serial_number || row.serialNumber || '').trim(),
+            countryOfOrigin: String(row.country_of_origin || row.countryOfOrigin || '').trim(),
+            manufacturer: String(row.manufacturer || '').trim(),
+            unitPrice: Number(row.unit_price || row.unitPrice || 0),
+            vat: Number(row.vat || 0),
+            fundingSource: String(row.funding_source || row.fundingSource || '').trim(),
+            supplier: String(row.supplier || '').trim(),
+            status: String(row.status || 'Active').trim(),
+            purchaseDate: String(row.purchase_date || row.purchaseDate || new Date().toISOString().split('T')[0]).trim(),
+            warrantyExpiry: String(row.warranty_expiry || row.warrantyExpiry || new Date().toISOString().split('T')[0]).trim(),
             departmentId: Number(row.department_id || row.departmentId || null)
           };
 
@@ -278,21 +278,21 @@ export async function registerRoutes(app: Express) {
   app.get("/template.xlsx", requireAuth, (_req, res) => {
     const template = [
       {
-        equipment_id: "MD001",
-        equipment_name: "Máy X-Ray DR-3000",
-        equipment_type: "Chẩn đoán hình ảnh",
+        equipmentId: "MD001",
+        equipmentName: "Máy X-Ray DR-3000",
+        equipmentType: "Chẩn đoán hình ảnh",
         model: "DR-3000",
-        serial_number: "XR2023001",
-        country_of_origin: "Japan",
+        serialNumber: "XR2023001",
+        countryOfOrigin: "Japan",
         manufacturer: "Toshiba",
-        unit_price: "150000000",
+        unitPrice: "150000000",
         vat: "10",
-        funding_source: "Ngân sách nhà nước",
+        fundingSource: "Ngân sách nhà nước",
         supplier: "Công ty ABC",
         status: "Active",
-        purchase_date: "2023-01-01",
-        warranty_expiry: "2025-01-01",
-        department_id: "1"
+        purchaseDate: "2023-01-01",
+        warrantyExpiry: "2025-01-01",
+        departmentId: 1
       }
     ];
 
@@ -309,21 +309,21 @@ export async function registerRoutes(app: Express) {
 
   app.get("/template.csv", requireAuth, (_req, res) => {
     const headers = [
-      "equipment_id",
-      "equipment_name",
-      "equipment_type",
+      "equipmentId",
+      "equipmentName",
+      "equipmentType",
       "model",
-      "serial_number",
-      "country_of_origin",
+      "serialNumber",
+      "countryOfOrigin",
       "manufacturer",
-      "unit_price",
+      "unitPrice",
       "vat",
-      "funding_source",
+      "fundingSource",
       "supplier",
       "status",
-      "purchase_date",
-      "warranty_expiry",
-      "department_id"
+      "purchaseDate",
+      "warrantyExpiry",
+      "departmentId"
     ].join(",");
 
     const sampleData = [
@@ -398,9 +398,9 @@ export async function registerRoutes(app: Express) {
       {
         username: "user123",
         password: "password123",
-        full_name: "Nguyễn Văn A",
+        fullName: "Nguyễn Văn A",
         role: "user",
-        department_id: "1"
+        departmentId: 1
       }
     ];
 
@@ -430,13 +430,40 @@ export async function registerRoutes(app: Express) {
 
       for (const row of data as Record<string, unknown>[]) {
         try {
+          // Convert departmentId safely
+          let departmentId = null;
+          if (row.departmentId !== undefined && row.departmentId !== null) {
+            const deptId = Number(row.departmentId);
+            if (!isNaN(deptId)) {
+              departmentId = deptId;
+            }
+          }
+
           const user = {
-            username: String(row.username || ''),
-            password: String(row.password || ''),
-            fullName: String(row.full_name || row.fullName || ''),
-            role: String(row.role || 'user'),
-            departmentId: Number(row.department_id || row.departmentId || null)
+            username: String(row.username || '').trim(),
+            password: String(row.password || '').trim(),
+            fullName: String(row.fullName || '').trim(),
+            role: String(row.role || 'user').trim(),
+            departmentId: departmentId
           };
+
+          // Validate required fields
+          if (!user.username || !user.password || !user.fullName) {
+            errors.push({
+              row: user,
+              error: "Username, password và tên đầy đủ không được để trống",
+            });
+            continue;
+          }
+
+          // Validate role
+          if (!['admin', 'manager', 'user'].includes(user.role)) {
+            errors.push({
+              row: user,
+              error: "Role không hợp lệ (phải là 'admin', 'manager' hoặc 'user')",
+            });
+            continue;
+          }
 
           const result = insertUserSchema.safeParse(user);
           if (!result.success) {
@@ -457,6 +484,18 @@ export async function registerRoutes(app: Express) {
             continue;
           }
 
+          // Kiểm tra department tồn tại
+          if (user.departmentId !== null) {
+            const department = await storage.getDepartment(user.departmentId);
+            if (!department) {
+              errors.push({
+                row: user,
+                error: `Phòng ban với ID ${user.departmentId} không tồn tại`,
+              });
+              continue;
+            }
+          }
+
           const savedUser = await storage.createUser(result.data);
           results.push(savedUser);
         } catch (error) {
@@ -473,6 +512,7 @@ export async function registerRoutes(app: Express) {
         errors: errors.length ? errors : undefined,
       });
     } catch (error) {
+      console.error('Import users error:', error);
       res.status(400).json({
         error: error instanceof Error ? error.message : "Failed to process file",
       });
