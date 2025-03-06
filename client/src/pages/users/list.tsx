@@ -26,6 +26,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { apiRequest } from "@/lib/queryClient";
 import { z } from "zod";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Schema cho form reset password
 const resetPasswordSchema = z.object({
@@ -165,10 +171,22 @@ export default function UserList() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Danh sách người dùng</h1>
         <div className="flex gap-2">
-          <Button onClick={handleDownloadTemplate} variant="outline" className="gap-2">
-            <Download className="h-4 w-4" />
-            Tải template
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <Download className="h-4 w-4" />
+                Tải template
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => window.location.href = '/user-template.xlsx'}>
+                Excel (.xlsx)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => window.location.href = '/user-template.csv'}>
+                CSV (.csv)
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button onClick={() => setIsImportDialogOpen(true)} variant="outline" className="gap-2">
             <Upload className="h-4 w-4" />
             Import
@@ -185,9 +203,9 @@ export default function UserList() {
       <div className="flex gap-4 mb-6">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-          <Input 
-            placeholder="Tìm kiếm người dùng..." 
-            className="pl-10" 
+          <Input
+            placeholder="Tìm kiếm người dùng..."
+            className="pl-10"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -213,7 +231,7 @@ export default function UserList() {
                 <TableCell>{getDepartmentName(user.departmentId)}</TableCell>
                 <TableCell>
                   {user.role === 'admin' ? 'Quản trị viên' :
-                   user.role === 'manager' ? 'Quản lý' : 'Người dùng'}
+                    user.role === 'manager' ? 'Quản lý' : 'Người dùng'}
                 </TableCell>
                 <TableCell>
                   <Button
@@ -282,18 +300,18 @@ export default function UserList() {
           <DialogHeader>
             <DialogTitle>Import người dùng</DialogTitle>
             <DialogDescription>
-              Chọn file Excel để import danh sách người dùng
+              Chọn file Excel hoặc CSV để import danh sách người dùng
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <Input
               type="file"
-              accept=".xlsx,.xls"
+              accept=".xlsx,.xls,.csv"
               onChange={handleFileUpload}
               disabled={importMutation.isPending}
             />
             <p className="text-sm text-gray-500">
-              Tải template mẫu để xem cấu trúc file import
+              Tải template mẫu để xem cấu trúc file import (hỗ trợ cả Excel và CSV)
             </p>
           </div>
         </DialogContent>

@@ -579,5 +579,30 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // Thêm route cho user template CSV
+  app.get("/user-template.csv", requireAuth, requireAdminOrManager, (_req, res) => {
+    const headers = [
+      "username",
+      "password", 
+      "fullName",
+      "role",
+      "departmentId"
+    ].join(",");
+
+    const sampleData = [
+      "user123",
+      "password123",
+      "Nguyễn Văn A",
+      "user",
+      "1"
+    ].join(",");
+
+    const csvContent = `${headers}\n${sampleData}`;
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename=user-template.csv');
+    res.send(csvContent);
+  });
+
   return createServer(app);
 }
