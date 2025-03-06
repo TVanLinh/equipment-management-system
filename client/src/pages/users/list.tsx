@@ -86,10 +86,36 @@ export default function UserList() {
       return res.json();
     },
     onSuccess: (data) => {
-      toast({
-        title: "Import thành công",
-        description: `Đã import ${data.imported} người dùng.${data.errors?.length ? ` Có ${data.errors.length} lỗi.` : ''}`,
-      });
+      if (data.errors?.length > 0) {
+        // Show error toast with details
+        toast({
+          title: "Import không thành công",
+          description: (
+            <div className="mt-2 space-y-2">
+              <p>Đã import {data.imported} người dùng. Có {data.errors.length} lỗi:</p>
+              <ul className="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                {data.errors.slice(0, 5).map((error: any, index: number) => (
+                  <li key={index} className="text-sm">
+                    {error.error}
+                  </li>
+                ))}
+                {data.errors.length > 5 && (
+                  <li className="text-sm font-medium">
+                    ... và {data.errors.length - 5} lỗi khác
+                  </li>
+                )}
+              </ul>
+            </div>
+          ),
+          variant: "destructive",
+          duration: 10000,
+        });
+      } else {
+        toast({
+          title: "Import thành công",
+          description: `Đã import ${data.imported} người dùng.`,
+        });
+      }
       setIsImportDialogOpen(false);
       queryClient.invalidateQueries({ queryKey: ["/api/users"] });
     },

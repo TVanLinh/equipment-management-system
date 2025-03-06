@@ -399,14 +399,26 @@ export async function registerRoutes(app: Express) {
         username: "user123",
         password: "password123",
         fullName: "Nguyễn Văn A",
-        role: "user",
+        role: "user", 
         departmentId: 1
       }
     ];
 
     const wb = xlsx.utils.book_new();
     const ws = xlsx.utils.json_to_sheet(template);
+
+    // Thêm validation và hướng dẫn
+    const validationWs = xlsx.utils.aoa_to_sheet([
+      ['Hướng dẫn nhập liệu:'],
+      ['- username: Tên đăng nhập (bắt buộc)'],
+      ['- password: Mật khẩu (bắt buộc)'],
+      ['- fullName: Tên đầy đủ (bắt buộc)'],
+      ['- role: Quyền (admin/manager/user), mặc định là user'],
+      ['- departmentId: ID phòng ban (số)']
+    ]);
+
     xlsx.utils.book_append_sheet(wb, ws, "Template");
+    xlsx.utils.book_append_sheet(wb, validationWs, "Hướng dẫn");
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename=user-template.xlsx');
@@ -418,117 +430,151 @@ export async function registerRoutes(app: Express) {
   app.post("/api/users/import", requireAuth, requireAdminOrManager, upload.single('file'), async (req: Request & { file?: Express.Multer.File }, res) => {
     try {
       if (!req.file) {
-        return res.status(400).json({ error: "No file uploaded" });
+        return res.status(400).json({ error: "Chưa chọn file để import" });
       }
 
       const workbook = xlsx.read(req.file.buffer);
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const data = xlsx.utils.sheet_to_json(worksheet);
 
-      console.log('Import data:', data); // Log data để debug
+      console.log('Dữ liệu từ file Excel:', data);
 
       const results = [];
       const errors = [];
+      let rowNumber = 2; // Bắt đầu từ dòng 2 (sau header)
 
       for (const row of data as Record<string, unknown>[]) {
         try {
-          console.log('Processing row:', row); // Log từng dòng để debug
+          console.log(`Đang xử lý dòng ${rowNumber}:`, row);
 
-          // Convert departmentId safely
-          let departmentId = null;
-          if (row.departmentId !== undefined && row.departmentId !== null) {
-            const deptId = Number(row.departmentId);
-            if (!isNaN(deptId)) {
-              departmentId = deptId;
-            }
-          }
-
-          const user = {
-            username: String(row.username || '').trim(),
-            password: String(row.password || '').trim(),
-            fullName: String(row.fullName || '').trim(),
-            role: String(row.role || 'user').trim(),
-            departmentId: departmentId
-          };
-
-          console.log('Converted user data:', user); // Log dữ liệu sau khi chuyển đổi
-
-          // Validate required fields
-          if (!user.username || !user.password || !user.fullName) {
+          // Validate các trường bắt buộc
+          if (!row.username || !row.password || !row.fullName) {
             errors.push({
-              row: user,
-              error: "Username, password và tên đầy đủ không được để trống",
+              row: rowNumber,
+              data: row,
+              error: `Dòng ${rowNumber}: Username, password và tên đầy đủ không được để trống`
             });
+            rowNumber++;
             continue;
           }
 
           // Validate role
-          if (!['admin', 'manager', 'user'].includes(user.role)) {
+          const role = String(row.role || 'user').trim().toLowerCase();
+          if (!['admin', 'manager', 'user'].includes(role)) {
             errors.push({
-              row: user,
-              error: "Role không hợp lệ (phải là 'admin', 'manager' hoặc 'user')",
+              row: rowNumber,
+              data: row,
+              error: `Dòng ${rowNumber}: Role không hợp lệ (phải là 'admin', 'manager' hoặc 'user')`
             });
+            rowNumber++;
             continue;
           }
 
-          const result = insertUserSchema.safeParse(user);
-          if (!result.success) {
-            console.log('Schema validation errors:', result.error.errors); // Log lỗi validation
-            errors.push({
-              row: user,
-              errors: result.error.errors,
-            });
-            continue;
-          }
-
-          // Kiểm tra username đã tồn tại chưa
-          const existingUser = await storage.getUserByUsername(user.username);
-          if (existingUser) {
-            errors.push({
-              row: user,
-              error: "Username đã tồn tại",
-            });
-            continue;
-          }
-
-          // Kiểm tra department tồn tại
-          if (user.departmentId !== null) {
-            const department = await storage.getDepartment(user.departmentId);
-            if (!department) {
+          // Kiểm tra và chuyển đổi departmentId
+          let departmentId = null;
+          if (row.departmentId) {
+            const deptId = Number(row.departmentId);
+            if (isNaN(deptId)) {
               errors.push({
-                row: user,
-                error: `Phòng ban với ID ${user.departmentId} không tồn tại`,
+                row: rowNumber,
+                data: row,
+                error: `Dòng ${rowNumber}: Department ID phải là số`
               });
+              rowNumber++;
               continue;
             }
+
+            // Kiểm tra department có tồn tại
+            const department = await storage.getDepartment(deptId);
+            if (!department) {
+              errors.push({
+                row: rowNumber,
+                data: row,
+                error: `Dòng ${rowNumber}: Phòng ban với ID ${deptId} không tồn tại`
+              });
+              rowNumber++;
+              continue;
+            }
+            departmentId = deptId;
+          }
+
+          // Kiểm tra username đã tồn tại
+          const existingUser = await storage.getUserByUsername(String(row.username));
+          if (existingUser) {
+            errors.push({
+              row: rowNumber,
+              data: row,
+              error: `Dòng ${rowNumber}: Username "${row.username}" đã tồn tại`
+            });
+            rowNumber++;
+            continue;
+          }
+
+          const userData = {
+            username: String(row.username).trim(),
+            password: String(row.password).trim(),
+            fullName: String(row.fullName).trim(),
+            role: role,
+            departmentId: departmentId
+          };
+
+          console.log(`Dữ liệu người dùng đã chuyển đổi dòng ${rowNumber}:`, userData);
+
+          const result = insertUserSchema.safeParse(userData);
+          if (!result.success) {
+            errors.push({
+              row: rowNumber,
+              data: row,
+              error: `Dòng ${rowNumber}: ${result.error.errors.map(e => e.message).join(', ')}`
+            });
+            rowNumber++;
+            continue;
           }
 
           const savedUser = await storage.createUser(result.data);
-          results.push(savedUser);
+          results.push({
+            row: rowNumber,
+            user: savedUser
+          });
+
         } catch (error) {
-          console.error('Error processing row:', error); // Log lỗi chi tiết
+          console.error(`Lỗi xử lý dòng ${rowNumber}:`, error);
           errors.push({
-            row,
-            error: error instanceof Error ? error.message : "Unknown error",
+            row: rowNumber,
+            data: row,
+            error: error instanceof Error ? error.message : "Lỗi không xác định"
           });
         }
+        rowNumber++;
       }
 
-      // Log kết quả cuối cùng
-      console.log('Import results:', {
+      console.log('Kết quả import:', {
+        total: data.length,
         imported: results.length,
-        errors: errors.length ? errors : undefined
+        errors: errors
       });
+
+      if (errors.length > 0) {
+        return res.json({
+          success: true,
+          imported: results.length,
+          failed: errors.length,
+          total: data.length,
+          errors: errors
+        });
+      }
 
       res.json({
         success: true,
         imported: results.length,
-        errors: errors.length ? errors : undefined,
+        total: data.length
       });
+
     } catch (error) {
-      console.error('Import users error:', error);
+      console.error('Lỗi import user:', error);
       res.status(400).json({
-        error: error instanceof Error ? error.message : "Failed to process file",
+        error: error instanceof Error ? error.message : "Lỗi xử lý file",
+        details: error
       });
     }
   });
