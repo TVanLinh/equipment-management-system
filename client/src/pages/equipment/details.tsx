@@ -3,9 +3,17 @@ import { useParams, Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Edit, Wrench, Loader2 } from "lucide-react";
-import type { Equipment, Department } from "@shared/schema";
+import type { Equipment, Department, Maintenance } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default function EquipmentDetails() {
   const { id } = useParams();
@@ -17,6 +25,10 @@ export default function EquipmentDetails() {
 
   const { data: departments } = useQuery<Department[]>({
     queryKey: ["/api/departments"],
+  });
+
+  const { data: maintenanceHistory, isLoading: isLoadingMaintenance } = useQuery<Maintenance[]>({
+    queryKey: [`/api/equipment/${id}/maintenance`],
   });
 
   if (isLoading) {
@@ -214,6 +226,49 @@ export default function EquipmentDetails() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Lịch sử bảo trì */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Lịch sử bảo trì</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoadingMaintenance ? (
+            <div className="flex items-center justify-center h-32">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : maintenanceHistory?.length === 0 ? (
+            <p className="text-center text-muted-foreground py-8">
+              Chưa có lịch sử bảo trì
+            </p>
+          ) : (
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Ngày bắt đầu</TableHead>
+                    <TableHead>Ngày kết thúc</TableHead>
+                    <TableHead>Loại bảo trì</TableHead>
+                    <TableHead>Người thực hiện</TableHead>
+                    <TableHead>Ghi chú</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {maintenanceHistory?.map((record) => (
+                    <TableRow key={record.id}>
+                      <TableCell>{new Date(record.startDate).toLocaleDateString('vi-VN')}</TableCell>
+                      <TableCell>{new Date(record.endDate).toLocaleDateString('vi-VN')}</TableCell>
+                      <TableCell>{record.maintenanceType}</TableCell>
+                      <TableCell>{record.performedBy}</TableCell>
+                      <TableCell>{record.notes}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
