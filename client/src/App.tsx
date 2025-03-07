@@ -70,7 +70,7 @@ function Router() {
   );
 }
 
-export default function App() {
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router />
@@ -78,3 +78,5 @@ export default function App() {
     </QueryClientProvider>
   );
 }
+
+export default App;

@@ -1,4 +1,3 @@
-
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import fs from 'fs';
@@ -8,20 +7,20 @@ dotenv.config();
 
 async function initializeMySQL() {
   try {
-    // Kết nối đến MySQL server với IP trực tiếp
+    // Kết nối đến MySQL server
     const connection = await mysql.createConnection({
-      host: '34.133.56.193',
-      user: 'sondn',
-      password: 'sondn',
-      port: 3306
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      port: Number(process.env.DB_PORT)
     });
 
     // Tạo database nếu chưa tồn tại
-    await connection.query(`CREATE DATABASE IF NOT EXISTS equipment_management`);
-    console.log(`Database equipment_management đã được tạo hoặc đã tồn tại`);
+    await connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME}`);
+    console.log(`Database ${process.env.DB_NAME} đã được tạo hoặc đã tồn tại`);
 
     // Chọn database để sử dụng
-    await connection.query(`USE equipment_management`);
+    await connection.query(`USE ${process.env.DB_NAME}`);
 
     // Đọc file schema.sql
     const schemaPath = path.join(__dirname, '..', 'server', 'schema.sql');
@@ -45,4 +44,5 @@ async function initializeMySQL() {
   }
 }
 
+// Chạy script
 initializeMySQL();

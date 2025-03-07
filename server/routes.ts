@@ -44,13 +44,6 @@ const requireAdminOrManager = async (req: Request, res: Response, next: NextFunc
 };
 
 export async function registerRoutes(app: Express) {
-  // Add CORS middleware
-  app.use((_req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    next();
-  });
-
   // Cấu hình session trước khi đăng ký routes
   app.use(
     session({
