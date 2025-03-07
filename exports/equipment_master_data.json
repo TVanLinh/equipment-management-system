@@ -1,0 +1,1598 @@
+{
+  "departments": [
+    {
+      "name": "Khoa kế hoạch hóa gia đình",
+      "code": "DNSKSS-KHHGD",
+      "id": 1
+    },
+    {
+      "name": "Khoa Dinh Dưỡng",
+      "code": "DNDD",
+      "id": 2
+    },
+    {
+      "name": "Đơn Nguyên Nội Tim Mạch",
+      "code": "DNNTM",
+      "id": 3
+    },
+    {
+      "name": "Khoa liên chuyên khoa Tai mũi họng; Răng hàm mặt; Mắt",
+      "code": "DNTMH",
+      "id": 4
+    },
+    {
+      "name": "Đơn Nguyên Răng - Hàm - Mặt",
+      "code": "DNRHM",
+      "id": 5
+    },
+    {
+      "name": "Đơn Nguyên Mắt",
+      "code": "DNKM",
+      "id": 6
+    },
+    {
+      "name": "HỒI SỨC TÍCH CỰC SƠ SINH",
+      "code": "HSTCSS",
+      "id": 7
+    },
+    {
+      "name": "Khoa Gây mê-HS Dã Chiến",
+      "code": "GMHSDC",
+      "id": 8
+    },
+    {
+      "name": "Khoa Điều Trị 3",
+      "code": "DT3",
+      "id": 9
+    },
+    {
+      "name": "Khoa Điều Trị 4",
+      "code": "DT4",
+      "id": 10
+    },
+    {
+      "name": "Khoa Theo Dõi BN Trước Khi Ra Viện",
+      "code": "KTKRV",
+      "id": 11
+    },
+    {
+      "name": "Khoa Hồi Sức Cấp Cứu Dã Chiến",
+      "code": "HSCCDC",
+      "id": 12
+    },
+    {
+      "name": "Khoa Sản Dã Chiến",
+      "code": "KSDC2",
+      "id": 13
+    },
+    {
+      "name": "Khoa Xét Nghiệm (Khai Quang)",
+      "code": "XNDC",
+      "id": 14
+    },
+    {
+      "name": "Khoa Khám Bệnh (Khai Quang)",
+      "code": "KB",
+      "id": 15
+    },
+    {
+      "name": "Phòng Công Nghệ Thông Tin",
+      "code": "CNTT",
+      "id": 16
+    },
+    {
+      "name": "Khoa Điều Trị 2",
+      "code": "DT2",
+      "id": 17
+    },
+    {
+      "name": "Khoa Chẩn Đoán Hình Ảnh ( Khai Quang)",
+      "code": "CDHADC",
+      "id": 18
+    },
+    {
+      "name": "Quản trị hệ thống",
+      "code": "QTHT",
+      "id": 19
+    },
+    {
+      "name": "Khoa Khám bệnh",
+      "code": "KBENH",
+      "id": 20
+    },
+    {
+      "name": "KHOA HỒI SỨC TÍCH CỰC VÀ CHỐNG ĐỘC",
+      "code": "HSCC",
+      "id": 21
+    },
+    {
+      "name": "Khoa Nội Nhi",
+      "code": "NOIN",
+      "id": 22
+    },
+    {
+      "name": "Khoa Truyền nhiễm",
+      "code": "TNHIEM",
+      "id": 23
+    },
+    {
+      "name": "Khoa Sơ Sinh",
+      "code": "SS",
+      "id": 24
+    },
+    {
+      "name": "Khoa đơn nguyên tiêm chủng",
+      "code": "DNTC",
+      "id": 25
+    },
+    {
+      "name": "Khoa Ngoại Nhi",
+      "code": "NGOAIN",
+      "id": 26
+    },
+    {
+      "name": "Khoa Chấn Thương Chỉnh Hình",
+      "code": "CTCH",
+      "id": 27
+    },
+    {
+      "name": "Khoa Gây mê-HS",
+      "code": "GMHS",
+      "id": 28
+    },
+    {
+      "name": "Đơn Nguyên Hồi Sức Sau Mổ",
+      "code": "DNHSSM",
+      "id": 29
+    },
+    {
+      "name": "Khoa Sản",
+      "code": "SAN",
+      "id": 30
+    },
+    {
+      "name": "Khoa Phụ",
+      "code": "PHTSS",
+      "id": 31
+    },
+    {
+      "name": "Khoa Sản Bệnh",
+      "code": "SBENH",
+      "id": 32
+    },
+    {
+      "name": "Khoa hiếm muộn",
+      "code": "HMUON",
+      "id": 33
+    },
+    {
+      "name": "Khoa Liên chuyên khoa",
+      "code": "LCK",
+      "id": 34
+    },
+    {
+      "name": "Khoa huyết học - Truyền Máu",
+      "code": "HHOC",
+      "id": 35
+    },
+    {
+      "name": "Khoa Vi sinh",
+      "code": "DNVS",
+      "id": 36
+    },
+    {
+      "name": "Khoa Sinh Hóa",
+      "code": "SHOA",
+      "id": 37
+    },
+    {
+      "name": "Khoa Chẩn đoán hình ảnh",
+      "code": "CDHA",
+      "id": 38
+    },
+    {
+      "name": "Khoa Chống nhiễm khuẩn",
+      "code": "KCNKHUAN",
+      "id": 39
+    },
+    {
+      "name": "Khoa Dược",
+      "code": "DUOC",
+      "id": 40
+    },
+    {
+      "name": "Phòng Điều dưỡng",
+      "code": "PDD",
+      "id": 41
+    },
+    {
+      "name": "Phòng Tổ chức hành chính",
+      "code": "TCHC",
+      "id": 42
+    },
+    {
+      "name": "Kế hoạch tổng hợp",
+      "code": "KHTH",
+      "id": 43
+    },
+    {
+      "name": "Ban giám đốc",
+      "code": "BGĐ",
+      "id": 44
+    },
+    {
+      "name": "Phòng Tài chính kế toán",
+      "code": "TCKT",
+      "id": 45
+    },
+    {
+      "name": "Khoa Hô Hấp",
+      "code": "DNHH",
+      "id": 46
+    },
+    {
+      "name": "KHOA SẢN THƯỜNG",
+      "code": "KST1",
+      "id": 47
+    },
+    {
+      "name": "KHOA CẤP CỨU",
+      "code": "HCC",
+      "id": 48
+    },
+    {
+      "name": "Khoa Chống Nhiễm Khuẩn Dã Chiến",
+      "code": "CNKDC",
+      "id": 49
+    },
+    {
+      "name": "Phòng Quản Lý Chất Lượng",
+      "code": "QLCL",
+      "id": 50
+    },
+    {
+      "name": "Trung tâm Hỗ trợ sinh sản",
+      "code": "THHTS01",
+      "id": 51
+    },
+    {
+      "name": "Đơn Nguyên Tâm Bệnh - Phục Hồi Chức Năng",
+      "code": "K03.1",
+      "id": 52
+    },
+    {
+      "name": "Phòng Vật Tư Trang Thiết Bị Y Tế",
+      "code": "VTTTB",
+      "id": 53
+    }
+  ],
+  "equipment": [
+    {
+      "equipmentId": "MD001",
+      "equipmentName": "Thiết bị 316",
+      "equipmentType": "Chẩn đoán hình ảnh",
+      "model": "Model-5867",
+      "serialNumber": "SN74166",
+      "countryOfOrigin": "Trung Quốc",
+      "manufacturer": "Siemens",
+      "unitPrice": "869720829",
+      "vat": "15",
+      "fundingSource": "Ngân sách nhà nước",
+      "supplier": "Công ty XYZ",
+      "status": "Active",
+      "purchaseDate": "2021-08-03",
+      "warrantyExpiry": "2023-08-03",
+      "departmentId": 31,
+      "id": 1
+    },
+    {
+      "equipmentId": "MD002",
+      "equipmentName": "Thiết bị 319",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-6362",
+      "serialNumber": "SN20069",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Siemens",
+      "unitPrice": "733678653",
+      "vat": "5",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Healthcare",
+      "status": "Active",
+      "purchaseDate": "2022-06-02",
+      "warrantyExpiry": "2025-06-02",
+      "departmentId": 17,
+      "id": 2
+    },
+    {
+      "equipmentId": "MD003",
+      "equipmentName": "Thiết bị 392",
+      "equipmentType": "Phẫu thuật",
+      "model": "Model-7725",
+      "serialNumber": "SN47269",
+      "countryOfOrigin": "Đức",
+      "manufacturer": "Phillips",
+      "unitPrice": "113020849",
+      "vat": "15",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty Healthcare",
+      "status": "Inactive",
+      "purchaseDate": "2020-01-11",
+      "warrantyExpiry": "2022-01-11",
+      "departmentId": 44,
+      "id": 3
+    },
+    {
+      "equipmentId": "MD004",
+      "equipmentName": "Thiết bị 62",
+      "equipmentType": "Hồi sức cấp cứu",
+      "model": "Model-8274",
+      "serialNumber": "SN62218",
+      "countryOfOrigin": "Đức",
+      "manufacturer": "Siemens",
+      "unitPrice": "380809513",
+      "vat": "15",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty Medical",
+      "status": "Inactive",
+      "purchaseDate": "2020-05-16",
+      "warrantyExpiry": "2023-05-16",
+      "departmentId": 45,
+      "id": 4
+    },
+    {
+      "equipmentId": "MD005",
+      "equipmentName": "Thiết bị 886",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-1895",
+      "serialNumber": "SN62784",
+      "countryOfOrigin": "Nhật Bản",
+      "manufacturer": "Siemens",
+      "unitPrice": "238671755",
+      "vat": "5",
+      "fundingSource": "Ngân sách nhà nước",
+      "supplier": "Công ty ABC",
+      "status": "Active",
+      "purchaseDate": "2022-01-21",
+      "warrantyExpiry": "2026-01-21",
+      "departmentId": 16,
+      "id": 5
+    },
+    {
+      "equipmentId": "MD006",
+      "equipmentName": "Thiết bị 605",
+      "equipmentType": "Phẫu thuật",
+      "model": "Model-9989",
+      "serialNumber": "SN51302",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Samsung Medison",
+      "unitPrice": "916982440",
+      "vat": "15",
+      "fundingSource": "Ngân sách nhà nước",
+      "supplier": "Công ty XYZ",
+      "status": "Active",
+      "purchaseDate": "2020-01-15",
+      "warrantyExpiry": "2024-01-15",
+      "departmentId": 7,
+      "id": 6
+    },
+    {
+      "equipmentId": "MD007",
+      "equipmentName": "Thiết bị 286",
+      "equipmentType": "Phẫu thuật",
+      "model": "Model-6936",
+      "serialNumber": "SN66070",
+      "countryOfOrigin": "Nhật Bản",
+      "manufacturer": "Phillips",
+      "unitPrice": "868451373",
+      "vat": "10",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty Healthcare",
+      "status": "Active",
+      "purchaseDate": "2023-02-19",
+      "warrantyExpiry": "2025-02-19",
+      "departmentId": 32,
+      "id": 7
+    },
+    {
+      "equipmentId": "MD008",
+      "equipmentName": "Thiết bị 703",
+      "equipmentType": "Chẩn đoán hình ảnh",
+      "model": "Model-7509",
+      "serialNumber": "SN83864",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Toshiba",
+      "unitPrice": "885024953",
+      "vat": "10",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Medical",
+      "status": "Maintenance",
+      "purchaseDate": "2022-04-05",
+      "warrantyExpiry": "2025-04-05",
+      "departmentId": 19,
+      "id": 8
+    },
+    {
+      "equipmentId": "MD009",
+      "equipmentName": "Thiết bị 797",
+      "equipmentType": "Chẩn đoán hình ảnh",
+      "model": "Model-5664",
+      "serialNumber": "SN37669",
+      "countryOfOrigin": "Trung Quốc",
+      "manufacturer": "Phillips",
+      "unitPrice": "434551921",
+      "vat": "15",
+      "fundingSource": "Ngân sách nhà nước",
+      "supplier": "Công ty Medical",
+      "status": "Inactive",
+      "purchaseDate": "2020-03-03",
+      "warrantyExpiry": "2023-03-03",
+      "departmentId": 37,
+      "id": 9
+    },
+    {
+      "equipmentId": "MD010",
+      "equipmentName": "Thiết bị 840",
+      "equipmentType": "Hồi sức cấp cứu",
+      "model": "Model-9118",
+      "serialNumber": "SN68038",
+      "countryOfOrigin": "Trung Quốc",
+      "manufacturer": "Phillips",
+      "unitPrice": "631967706",
+      "vat": "15",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty ABC",
+      "status": "Inactive",
+      "purchaseDate": "2020-09-08",
+      "warrantyExpiry": "2024-09-08",
+      "departmentId": 45,
+      "id": 10
+    },
+    {
+      "equipmentId": "MD011",
+      "equipmentName": "Thiết bị 854",
+      "equipmentType": "Xét nghiệm",
+      "model": "Model-7105",
+      "serialNumber": "SN83874",
+      "countryOfOrigin": "Đức",
+      "manufacturer": "Phillips",
+      "unitPrice": "275806825",
+      "vat": "10",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Medical",
+      "status": "Active",
+      "purchaseDate": "2020-09-07",
+      "warrantyExpiry": "2023-09-07",
+      "departmentId": 26,
+      "id": 11
+    },
+    {
+      "equipmentId": "MD012",
+      "equipmentName": "Thiết bị 66",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-6713",
+      "serialNumber": "SN75998",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Siemens",
+      "unitPrice": "217834948",
+      "vat": "5",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Medical",
+      "status": "Inactive",
+      "purchaseDate": "2023-11-21",
+      "warrantyExpiry": "2026-11-21",
+      "departmentId": 22,
+      "id": 12
+    },
+    {
+      "equipmentId": "MD013",
+      "equipmentName": "Thiết bị 909",
+      "equipmentType": "Hồi sức cấp cứu",
+      "model": "Model-6887",
+      "serialNumber": "SN88541",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Siemens",
+      "unitPrice": "472434249",
+      "vat": "5",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty ABC",
+      "status": "Active",
+      "purchaseDate": "2023-07-11",
+      "warrantyExpiry": "2027-07-11",
+      "departmentId": 51,
+      "id": 13
+    },
+    {
+      "equipmentId": "MD014",
+      "equipmentName": "Thiết bị 502",
+      "equipmentType": "Phẫu thuật",
+      "model": "Model-6711",
+      "serialNumber": "SN98437",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Siemens",
+      "unitPrice": "941435211",
+      "vat": "5",
+      "fundingSource": "Ngân sách nhà nước",
+      "supplier": "Công ty Healthcare",
+      "status": "Maintenance",
+      "purchaseDate": "2020-02-06",
+      "warrantyExpiry": "2023-02-06",
+      "departmentId": 3,
+      "id": 14
+    },
+    {
+      "equipmentId": "MD015",
+      "equipmentName": "Thiết bị 836",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-5692",
+      "serialNumber": "SN14649",
+      "countryOfOrigin": "Trung Quốc",
+      "manufacturer": "Siemens",
+      "unitPrice": "130618787",
+      "vat": "15",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty Healthcare",
+      "status": "Active",
+      "purchaseDate": "2022-03-01",
+      "warrantyExpiry": "2024-03-01",
+      "departmentId": 24,
+      "id": 15
+    },
+    {
+      "equipmentId": "MD016",
+      "equipmentName": "Thiết bị 80",
+      "equipmentType": "Chẩn đoán hình ảnh",
+      "model": "Model-7764",
+      "serialNumber": "SN67218",
+      "countryOfOrigin": "Nhật Bản",
+      "manufacturer": "GE Healthcare",
+      "unitPrice": "514268384",
+      "vat": "10",
+      "fundingSource": "Ngân sách nhà nước",
+      "supplier": "Công ty Healthcare",
+      "status": "Active",
+      "purchaseDate": "2020-06-14",
+      "warrantyExpiry": "2023-06-14",
+      "departmentId": 41,
+      "id": 16
+    },
+    {
+      "equipmentId": "MD017",
+      "equipmentName": "Thiết bị 394",
+      "equipmentType": "Chẩn đoán hình ảnh",
+      "model": "Model-1948",
+      "serialNumber": "SN94174",
+      "countryOfOrigin": "Trung Quốc",
+      "manufacturer": "Toshiba",
+      "unitPrice": "928604914",
+      "vat": "10",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty Medical",
+      "status": "Inactive",
+      "purchaseDate": "2021-01-14",
+      "warrantyExpiry": "2025-01-14",
+      "departmentId": 21,
+      "id": 17
+    },
+    {
+      "equipmentId": "MD018",
+      "equipmentName": "Thiết bị 666",
+      "equipmentType": "Phẫu thuật",
+      "model": "Model-4199",
+      "serialNumber": "SN58668",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Toshiba",
+      "unitPrice": "906644622",
+      "vat": "10",
+      "fundingSource": "Ngân sách nhà nước",
+      "supplier": "Công ty Medical",
+      "status": "Maintenance",
+      "purchaseDate": "2022-12-07",
+      "warrantyExpiry": "2024-12-07",
+      "departmentId": 26,
+      "id": 18
+    },
+    {
+      "equipmentId": "MD019",
+      "equipmentName": "Thiết bị 908",
+      "equipmentType": "Chẩn đoán hình ảnh",
+      "model": "Model-9263",
+      "serialNumber": "SN77900",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Toshiba",
+      "unitPrice": "126863849",
+      "vat": "15",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty ABC",
+      "status": "Active",
+      "purchaseDate": "2021-05-31",
+      "warrantyExpiry": "2024-05-31",
+      "departmentId": 33,
+      "id": 19
+    },
+    {
+      "equipmentId": "MD020",
+      "equipmentName": "Thiết bị 444",
+      "equipmentType": "Hồi sức cấp cứu",
+      "model": "Model-3347",
+      "serialNumber": "SN25333",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "GE Healthcare",
+      "unitPrice": "418115713",
+      "vat": "5",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Medical",
+      "status": "Inactive",
+      "purchaseDate": "2023-03-16",
+      "warrantyExpiry": "2025-03-16",
+      "departmentId": 44,
+      "id": 20
+    },
+    {
+      "equipmentId": "MD021",
+      "equipmentName": "Thiết bị 661",
+      "equipmentType": "Phẫu thuật",
+      "model": "Model-4141",
+      "serialNumber": "SN59311",
+      "countryOfOrigin": "Đức",
+      "manufacturer": "Samsung Medison",
+      "unitPrice": "929964114",
+      "vat": "10",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty ABC",
+      "status": "Active",
+      "purchaseDate": "2020-09-23",
+      "warrantyExpiry": "2022-09-23",
+      "departmentId": 39,
+      "id": 21
+    },
+    {
+      "equipmentId": "MD022",
+      "equipmentName": "Thiết bị 749",
+      "equipmentType": "Chẩn đoán hình ảnh",
+      "model": "Model-4185",
+      "serialNumber": "SN65949",
+      "countryOfOrigin": "Trung Quốc",
+      "manufacturer": "Phillips",
+      "unitPrice": "807694431",
+      "vat": "10",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty ABC",
+      "status": "Maintenance",
+      "purchaseDate": "2022-06-02",
+      "warrantyExpiry": "2025-06-02",
+      "departmentId": 52,
+      "id": 22
+    },
+    {
+      "equipmentId": "MD023",
+      "equipmentName": "Thiết bị 679",
+      "equipmentType": "Hồi sức cấp cứu",
+      "model": "Model-8978",
+      "serialNumber": "SN81779",
+      "countryOfOrigin": "Đức",
+      "manufacturer": "Siemens",
+      "unitPrice": "958013648",
+      "vat": "15",
+      "fundingSource": "Ngân sách nhà nước",
+      "supplier": "Công ty XYZ",
+      "status": "Active",
+      "purchaseDate": "2020-09-01",
+      "warrantyExpiry": "2022-09-01",
+      "departmentId": 41,
+      "id": 23
+    },
+    {
+      "equipmentId": "MD024",
+      "equipmentName": "Thiết bị 70",
+      "equipmentType": "Xét nghiệm",
+      "model": "Model-9146",
+      "serialNumber": "SN79489",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Phillips",
+      "unitPrice": "520191933",
+      "vat": "10",
+      "fundingSource": "Ngân sách nhà nước",
+      "supplier": "Công ty Healthcare",
+      "status": "Inactive",
+      "purchaseDate": "2020-02-17",
+      "warrantyExpiry": "2024-02-17",
+      "departmentId": 11,
+      "id": 24
+    },
+    {
+      "equipmentId": "MD025",
+      "equipmentName": "Thiết bị 48",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-1979",
+      "serialNumber": "SN44290",
+      "countryOfOrigin": "Mỹ",
+      "manufacturer": "Phillips",
+      "unitPrice": "656563449",
+      "vat": "5",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Medical",
+      "status": "Active",
+      "purchaseDate": "2020-04-08",
+      "warrantyExpiry": "2023-04-08",
+      "departmentId": 36,
+      "id": 25
+    },
+    {
+      "equipmentId": "MD026",
+      "equipmentName": "Thiết bị 340",
+      "equipmentType": "Xét nghiệm",
+      "model": "Model-6018",
+      "serialNumber": "SN70116",
+      "countryOfOrigin": "Nhật Bản",
+      "manufacturer": "GE Healthcare",
+      "unitPrice": "646877065",
+      "vat": "10",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty ABC",
+      "status": "Maintenance",
+      "purchaseDate": "2020-01-11",
+      "warrantyExpiry": "2024-01-11",
+      "departmentId": 29,
+      "id": 26
+    },
+    {
+      "equipmentId": "MD027",
+      "equipmentName": "Thiết bị 784",
+      "equipmentType": "Phẫu thuật",
+      "model": "Model-7049",
+      "serialNumber": "SN22431",
+      "countryOfOrigin": "Đức",
+      "manufacturer": "Siemens",
+      "unitPrice": "444448885",
+      "vat": "15",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Medical",
+      "status": "Active",
+      "purchaseDate": "2020-04-30",
+      "warrantyExpiry": "2024-04-30",
+      "departmentId": 23,
+      "id": 27
+    },
+    {
+      "equipmentId": "MD028",
+      "equipmentName": "Thiết bị 934",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-5312",
+      "serialNumber": "SN86021",
+      "countryOfOrigin": "Đức",
+      "manufacturer": "Siemens",
+      "unitPrice": "961981283",
+      "vat": "5",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Healthcare",
+      "status": "Inactive",
+      "purchaseDate": "2021-09-23",
+      "warrantyExpiry": "2023-09-23",
+      "departmentId": 39,
+      "id": 28
+    },
+    {
+      "equipmentId": "MD029",
+      "equipmentName": "Thiết bị 447",
+      "equipmentType": "Xét nghiệm",
+      "model": "Model-9316",
+      "serialNumber": "SN63131",
+      "countryOfOrigin": "Mỹ",
+      "manufacturer": "Phillips",
+      "unitPrice": "976291873",
+      "vat": "5",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty ABC",
+      "status": "Inactive",
+      "purchaseDate": "2020-09-02",
+      "warrantyExpiry": "2023-09-02",
+      "departmentId": 1,
+      "id": 29
+    },
+    {
+      "equipmentId": "MD030",
+      "equipmentName": "Thiết bị 52",
+      "equipmentType": "Phẫu thuật",
+      "model": "Model-6147",
+      "serialNumber": "SN47669",
+      "countryOfOrigin": "Trung Quốc",
+      "manufacturer": "Siemens",
+      "unitPrice": "139088364",
+      "vat": "10",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty Healthcare",
+      "status": "Active",
+      "purchaseDate": "2020-05-17",
+      "warrantyExpiry": "2023-05-17",
+      "departmentId": 1,
+      "id": 30
+    },
+    {
+      "equipmentId": "MD031",
+      "equipmentName": "Thiết bị 55",
+      "equipmentType": "Phẫu thuật",
+      "model": "Model-2979",
+      "serialNumber": "SN63065",
+      "countryOfOrigin": "Mỹ",
+      "manufacturer": "Siemens",
+      "unitPrice": "828217869",
+      "vat": "15",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Healthcare",
+      "status": "Active",
+      "purchaseDate": "2023-09-13",
+      "warrantyExpiry": "2025-09-13",
+      "departmentId": 47,
+      "id": 31
+    },
+    {
+      "equipmentId": "MD032",
+      "equipmentName": "Thiết bị 17",
+      "equipmentType": "Xét nghiệm",
+      "model": "Model-1303",
+      "serialNumber": "SN28969",
+      "countryOfOrigin": "Đức",
+      "manufacturer": "Samsung Medison",
+      "unitPrice": "986110901",
+      "vat": "5",
+      "fundingSource": "Ngân sách nhà nước",
+      "supplier": "Công ty ABC",
+      "status": "Active",
+      "purchaseDate": "2023-06-22",
+      "warrantyExpiry": "2025-06-22",
+      "departmentId": 33,
+      "id": 32
+    },
+    {
+      "equipmentId": "MD033",
+      "equipmentName": "Thiết bị 792",
+      "equipmentType": "Xét nghiệm",
+      "model": "Model-4936",
+      "serialNumber": "SN38084",
+      "countryOfOrigin": "Trung Quốc",
+      "manufacturer": "Siemens",
+      "unitPrice": "725443430",
+      "vat": "5",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty ABC",
+      "status": "Maintenance",
+      "purchaseDate": "2021-09-11",
+      "warrantyExpiry": "2023-09-11",
+      "departmentId": 33,
+      "id": 33
+    },
+    {
+      "equipmentId": "MD034",
+      "equipmentName": "Thiết bị 511",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-9673",
+      "serialNumber": "SN99920",
+      "countryOfOrigin": "Đức",
+      "manufacturer": "Samsung Medison",
+      "unitPrice": "519524490",
+      "vat": "5",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Medical",
+      "status": "Inactive",
+      "purchaseDate": "2022-07-16",
+      "warrantyExpiry": "2026-07-16",
+      "departmentId": 27,
+      "id": 34
+    },
+    {
+      "equipmentId": "MD035",
+      "equipmentName": "Thiết bị 533",
+      "equipmentType": "Chẩn đoán hình ảnh",
+      "model": "Model-2595",
+      "serialNumber": "SN26596",
+      "countryOfOrigin": "Đức",
+      "manufacturer": "Phillips",
+      "unitPrice": "465379417",
+      "vat": "10",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty XYZ",
+      "status": "Maintenance",
+      "purchaseDate": "2022-04-14",
+      "warrantyExpiry": "2024-04-14",
+      "departmentId": 14,
+      "id": 35
+    },
+    {
+      "equipmentId": "MD036",
+      "equipmentName": "Thiết bị 232",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-1928",
+      "serialNumber": "SN28478",
+      "countryOfOrigin": "Mỹ",
+      "manufacturer": "Samsung Medison",
+      "unitPrice": "603501361",
+      "vat": "5",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty Healthcare",
+      "status": "Active",
+      "purchaseDate": "2021-10-26",
+      "warrantyExpiry": "2025-10-26",
+      "departmentId": 20,
+      "id": 36
+    },
+    {
+      "equipmentId": "MD037",
+      "equipmentName": "Thiết bị 659",
+      "equipmentType": "Hồi sức cấp cứu",
+      "model": "Model-1246",
+      "serialNumber": "SN21540",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "GE Healthcare",
+      "unitPrice": "670832411",
+      "vat": "15",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Medical",
+      "status": "Inactive",
+      "purchaseDate": "2020-04-30",
+      "warrantyExpiry": "2024-04-30",
+      "departmentId": 31,
+      "id": 37
+    },
+    {
+      "equipmentId": "MD038",
+      "equipmentName": "Thiết bị 187",
+      "equipmentType": "Chẩn đoán hình ảnh",
+      "model": "Model-6565",
+      "serialNumber": "SN51172",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "GE Healthcare",
+      "unitPrice": "244331368",
+      "vat": "10",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty ABC",
+      "status": "Active",
+      "purchaseDate": "2021-11-22",
+      "warrantyExpiry": "2024-11-22",
+      "departmentId": 25,
+      "id": 38
+    },
+    {
+      "equipmentId": "MD039",
+      "equipmentName": "Thiết bị 467",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-8264",
+      "serialNumber": "SN81233",
+      "countryOfOrigin": "Mỹ",
+      "manufacturer": "GE Healthcare",
+      "unitPrice": "249229854",
+      "vat": "15",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty ABC",
+      "status": "Maintenance",
+      "purchaseDate": "2022-05-31",
+      "warrantyExpiry": "2025-05-31",
+      "departmentId": 13,
+      "id": 39
+    },
+    {
+      "equipmentId": "MD040",
+      "equipmentName": "Thiết bị 270",
+      "equipmentType": "Hồi sức cấp cứu",
+      "model": "Model-7637",
+      "serialNumber": "SN49935",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "GE Healthcare",
+      "unitPrice": "824623094",
+      "vat": "15",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty ABC",
+      "status": "Inactive",
+      "purchaseDate": "2023-01-15",
+      "warrantyExpiry": "2026-01-15",
+      "departmentId": 31,
+      "id": 40
+    },
+    {
+      "equipmentId": "MD041",
+      "equipmentName": "Thiết bị 400",
+      "equipmentType": "Phẫu thuật",
+      "model": "Model-5939",
+      "serialNumber": "SN71786",
+      "countryOfOrigin": "Trung Quốc",
+      "manufacturer": "GE Healthcare",
+      "unitPrice": "317466134",
+      "vat": "5",
+      "fundingSource": "Ngân sách nhà nước",
+      "supplier": "Công ty Healthcare",
+      "status": "Active",
+      "purchaseDate": "2021-03-11",
+      "warrantyExpiry": "2024-03-11",
+      "departmentId": 51,
+      "id": 41
+    },
+    {
+      "equipmentId": "MD042",
+      "equipmentName": "Thiết bị 698",
+      "equipmentType": "Chẩn đoán hình ảnh",
+      "model": "Model-8600",
+      "serialNumber": "SN18502",
+      "countryOfOrigin": "Mỹ",
+      "manufacturer": "Phillips",
+      "unitPrice": "950341167",
+      "vat": "5",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty ABC",
+      "status": "Active",
+      "purchaseDate": "2021-04-19",
+      "warrantyExpiry": "2023-04-19",
+      "departmentId": 16,
+      "id": 42
+    },
+    {
+      "equipmentId": "MD043",
+      "equipmentName": "Thiết bị 496",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-5280",
+      "serialNumber": "SN84050",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Toshiba",
+      "unitPrice": "457793093",
+      "vat": "5",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty ABC",
+      "status": "Inactive",
+      "purchaseDate": "2023-01-16",
+      "warrantyExpiry": "2025-01-16",
+      "departmentId": 29,
+      "id": 43
+    },
+    {
+      "equipmentId": "MD044",
+      "equipmentName": "Thiết bị 160",
+      "equipmentType": "Chẩn đoán hình ảnh",
+      "model": "Model-4720",
+      "serialNumber": "SN35653",
+      "countryOfOrigin": "Mỹ",
+      "manufacturer": "Siemens",
+      "unitPrice": "241303673",
+      "vat": "5",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Healthcare",
+      "status": "Active",
+      "purchaseDate": "2021-11-23",
+      "warrantyExpiry": "2025-11-23",
+      "departmentId": 23,
+      "id": 44
+    },
+    {
+      "equipmentId": "MD045",
+      "equipmentName": "Thiết bị 42",
+      "equipmentType": "Xét nghiệm",
+      "model": "Model-7059",
+      "serialNumber": "SN38603",
+      "countryOfOrigin": "Trung Quốc",
+      "manufacturer": "Toshiba",
+      "unitPrice": "893451570",
+      "vat": "5",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Healthcare",
+      "status": "Maintenance",
+      "purchaseDate": "2020-12-15",
+      "warrantyExpiry": "2024-12-15",
+      "departmentId": 15,
+      "id": 45
+    },
+    {
+      "equipmentId": "MD046",
+      "equipmentName": "Thiết bị 201",
+      "equipmentType": "Phẫu thuật",
+      "model": "Model-7060",
+      "serialNumber": "SN21847",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Phillips",
+      "unitPrice": "522824042",
+      "vat": "10",
+      "fundingSource": "Vốn vay",
+      "supplier": "Công ty Medical",
+      "status": "Maintenance",
+      "purchaseDate": "2022-12-24",
+      "warrantyExpiry": "2024-12-24",
+      "departmentId": 46,
+      "id": 46
+    },
+    {
+      "equipmentId": "MD047",
+      "equipmentName": "Thiết bị 493",
+      "equipmentType": "Phẫu thuật",
+      "model": "Model-9466",
+      "serialNumber": "SN91520",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Toshiba",
+      "unitPrice": "252937477",
+      "vat": "5",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty Medical",
+      "status": "Inactive",
+      "purchaseDate": "2021-04-08",
+      "warrantyExpiry": "2023-04-08",
+      "departmentId": 37,
+      "id": 47
+    },
+    {
+      "equipmentId": "MD048",
+      "equipmentName": "Thiết bị 419",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-8308",
+      "serialNumber": "SN90106",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Samsung Medison",
+      "unitPrice": "595554726",
+      "vat": "5",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty XYZ",
+      "status": "Active",
+      "purchaseDate": "2020-12-16",
+      "warrantyExpiry": "2022-12-16",
+      "departmentId": 24,
+      "id": 48
+    },
+    {
+      "equipmentId": "MD049",
+      "equipmentName": "Thiết bị 249",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-3658",
+      "serialNumber": "SN42793",
+      "countryOfOrigin": "Hàn Quốc",
+      "manufacturer": "Phillips",
+      "unitPrice": "294773012",
+      "vat": "15",
+      "fundingSource": "Viện trợ",
+      "supplier": "Công ty Healthcare",
+      "status": "Inactive",
+      "purchaseDate": "2022-11-24",
+      "warrantyExpiry": "2026-11-24",
+      "departmentId": 38,
+      "id": 49
+    },
+    {
+      "equipmentId": "MD050",
+      "equipmentName": "Thiết bị 757",
+      "equipmentType": "Theo dõi bệnh nhân",
+      "model": "Model-4318",
+      "serialNumber": "SN94973",
+      "countryOfOrigin": "Trung Quốc",
+      "manufacturer": "Samsung Medison",
+      "unitPrice": "253914188",
+      "vat": "5",
+      "fundingSource": "Ngân sách nhà nước",
+      "supplier": "Công ty XYZ",
+      "status": "Active",
+      "purchaseDate": "2022-10-03",
+      "warrantyExpiry": "2024-10-03",
+      "departmentId": 46,
+      "id": 50
+    }
+  ],
+  "maintenance": [],
+  "users": [
+    {
+      "username": "admin",
+      "password": "***MASKED***",
+      "fullName": "Administrator",
+      "departmentId": 53,
+      "role": "admin",
+      "id": 1
+    },
+    {
+      "username": "manager",
+      "password": "***MASKED***",
+      "fullName": "Manager",
+      "departmentId": 44,
+      "role": "manager",
+      "id": 2
+    },
+    {
+      "username": "dnskss-khhgd",
+      "password": "***MASKED***",
+      "fullName": "Khoa kế hoạch hóa gia đình",
+      "departmentId": 1,
+      "role": "user",
+      "id": 3
+    },
+    {
+      "username": "dndd",
+      "password": "***MASKED***",
+      "fullName": "Khoa Dinh Dưỡng",
+      "departmentId": 2,
+      "role": "user",
+      "id": 4
+    },
+    {
+      "username": "dnntm",
+      "password": "***MASKED***",
+      "fullName": "Đơn Nguyên Nội Tim Mạch",
+      "departmentId": 3,
+      "role": "user",
+      "id": 5
+    },
+    {
+      "username": "dntmh",
+      "password": "***MASKED***",
+      "fullName": "Khoa liên chuyên khoa Tai mũi họng; Răng hàm mặt; Mắt",
+      "departmentId": 4,
+      "role": "user",
+      "id": 6
+    },
+    {
+      "username": "dnrhm",
+      "password": "***MASKED***",
+      "fullName": "Đơn Nguyên Răng - Hàm - Mặt",
+      "departmentId": 5,
+      "role": "user",
+      "id": 7
+    },
+    {
+      "username": "dnkm",
+      "password": "***MASKED***",
+      "fullName": "Đơn Nguyên Mắt",
+      "departmentId": 6,
+      "role": "user",
+      "id": 8
+    },
+    {
+      "username": "hstcss",
+      "password": "***MASKED***",
+      "fullName": "HỒI SỨC TÍCH CỰC SƠ SINH",
+      "departmentId": 7,
+      "role": "user",
+      "id": 9
+    },
+    {
+      "username": "gmhsdc",
+      "password": "***MASKED***",
+      "fullName": "Khoa Gây mê-HS Dã Chiến",
+      "departmentId": 8,
+      "role": "user",
+      "id": 10
+    },
+    {
+      "username": "dt3",
+      "password": "***MASKED***",
+      "fullName": "Khoa Điều Trị 3",
+      "departmentId": 9,
+      "role": "user",
+      "id": 11
+    },
+    {
+      "username": "dt4",
+      "password": "***MASKED***",
+      "fullName": "Khoa Điều Trị 4",
+      "departmentId": 10,
+      "role": "user",
+      "id": 12
+    },
+    {
+      "username": "ktkrv",
+      "password": "***MASKED***",
+      "fullName": "Khoa Theo Dõi BN Trước Khi Ra Viện",
+      "departmentId": 11,
+      "role": "user",
+      "id": 13
+    },
+    {
+      "username": "hsccdc",
+      "password": "***MASKED***",
+      "fullName": "Khoa Hồi Sức Cấp Cứu Dã Chiến",
+      "departmentId": 12,
+      "role": "user",
+      "id": 14
+    },
+    {
+      "username": "ksdc2",
+      "password": "***MASKED***",
+      "fullName": "Khoa Sản Dã Chiến",
+      "departmentId": 13,
+      "role": "user",
+      "id": 15
+    },
+    {
+      "username": "xndc",
+      "password": "***MASKED***",
+      "fullName": "Khoa Xét Nghiệm (Khai Quang)",
+      "departmentId": 14,
+      "role": "user",
+      "id": 16
+    },
+    {
+      "username": "kb",
+      "password": "***MASKED***",
+      "fullName": "Khoa Khám Bệnh (Khai Quang)",
+      "departmentId": 15,
+      "role": "user",
+      "id": 17
+    },
+    {
+      "username": "cntt",
+      "password": "***MASKED***",
+      "fullName": "Phòng Công Nghệ Thông Tin",
+      "departmentId": 16,
+      "role": "user",
+      "id": 18
+    },
+    {
+      "username": "dt2",
+      "password": "***MASKED***",
+      "fullName": "Khoa Điều Trị 2",
+      "departmentId": 17,
+      "role": "user",
+      "id": 19
+    },
+    {
+      "username": "cdhadc",
+      "password": "***MASKED***",
+      "fullName": "Khoa Chẩn Đoán Hình Ảnh ( Khai Quang)",
+      "departmentId": 18,
+      "role": "user",
+      "id": 20
+    },
+    {
+      "username": "qtht",
+      "password": "***MASKED***",
+      "fullName": "Quản trị hệ thống",
+      "departmentId": 19,
+      "role": "user",
+      "id": 21
+    },
+    {
+      "username": "kbenh",
+      "password": "***MASKED***",
+      "fullName": "Khoa Khám bệnh",
+      "departmentId": 20,
+      "role": "user",
+      "id": 22
+    },
+    {
+      "username": "hscc",
+      "password": "***MASKED***",
+      "fullName": "KHOA HỒI SỨC TÍCH CỰC VÀ CHỐNG ĐỘC",
+      "departmentId": 21,
+      "role": "user",
+      "id": 23
+    },
+    {
+      "username": "noin",
+      "password": "***MASKED***",
+      "fullName": "Khoa Nội Nhi",
+      "departmentId": 22,
+      "role": "user",
+      "id": 24
+    },
+    {
+      "username": "tnhiem",
+      "password": "***MASKED***",
+      "fullName": "Khoa Truyền nhiễm",
+      "departmentId": 23,
+      "role": "user",
+      "id": 25
+    },
+    {
+      "username": "ss",
+      "password": "***MASKED***",
+      "fullName": "Khoa Sơ Sinh",
+      "departmentId": 24,
+      "role": "user",
+      "id": 26
+    },
+    {
+      "username": "dntc",
+      "password": "***MASKED***",
+      "fullName": "Khoa đơn nguyên tiêm chủng",
+      "departmentId": 25,
+      "role": "user",
+      "id": 27
+    },
+    {
+      "username": "ngoain",
+      "password": "***MASKED***",
+      "fullName": "Khoa Ngoại Nhi",
+      "departmentId": 26,
+      "role": "user",
+      "id": 28
+    },
+    {
+      "username": "ctch",
+      "password": "***MASKED***",
+      "fullName": "Khoa Chấn Thương Chỉnh Hình",
+      "departmentId": 27,
+      "role": "user",
+      "id": 29
+    },
+    {
+      "username": "gmhs",
+      "password": "***MASKED***",
+      "fullName": "Khoa Gây mê-HS",
+      "departmentId": 28,
+      "role": "user",
+      "id": 30
+    },
+    {
+      "username": "dnhssm",
+      "password": "***MASKED***",
+      "fullName": "Đơn Nguyên Hồi Sức Sau Mổ",
+      "departmentId": 29,
+      "role": "user",
+      "id": 31
+    },
+    {
+      "username": "san",
+      "password": "***MASKED***",
+      "fullName": "Khoa Sản",
+      "departmentId": 30,
+      "role": "user",
+      "id": 32
+    },
+    {
+      "username": "phtss",
+      "password": "***MASKED***",
+      "fullName": "Khoa Phụ",
+      "departmentId": 31,
+      "role": "user",
+      "id": 33
+    },
+    {
+      "username": "sbenh",
+      "password": "***MASKED***",
+      "fullName": "Khoa Sản Bệnh",
+      "departmentId": 32,
+      "role": "user",
+      "id": 34
+    },
+    {
+      "username": "hmuon",
+      "password": "***MASKED***",
+      "fullName": "Khoa hiếm muộn",
+      "departmentId": 33,
+      "role": "user",
+      "id": 35
+    },
+    {
+      "username": "lck",
+      "password": "***MASKED***",
+      "fullName": "Khoa Liên chuyên khoa",
+      "departmentId": 34,
+      "role": "user",
+      "id": 36
+    },
+    {
+      "username": "hhoc",
+      "password": "***MASKED***",
+      "fullName": "Khoa huyết học - Truyền Máu",
+      "departmentId": 35,
+      "role": "user",
+      "id": 37
+    },
+    {
+      "username": "dnvs",
+      "password": "***MASKED***",
+      "fullName": "Khoa Vi sinh",
+      "departmentId": 36,
+      "role": "user",
+      "id": 38
+    },
+    {
+      "username": "shoa",
+      "password": "***MASKED***",
+      "fullName": "Khoa Sinh Hóa",
+      "departmentId": 37,
+      "role": "user",
+      "id": 39
+    },
+    {
+      "username": "cdha",
+      "password": "***MASKED***",
+      "fullName": "Khoa Chẩn đoán hình ảnh",
+      "departmentId": 38,
+      "role": "user",
+      "id": 40
+    },
+    {
+      "username": "kcnkhuan",
+      "password": "***MASKED***",
+      "fullName": "Khoa Chống nhiễm khuẩn",
+      "departmentId": 39,
+      "role": "user",
+      "id": 41
+    },
+    {
+      "username": "duoc",
+      "password": "***MASKED***",
+      "fullName": "Khoa Dược",
+      "departmentId": 40,
+      "role": "user",
+      "id": 42
+    },
+    {
+      "username": "pdd",
+      "password": "***MASKED***",
+      "fullName": "Phòng Điều dưỡng",
+      "departmentId": 41,
+      "role": "user",
+      "id": 43
+    },
+    {
+      "username": "tchc",
+      "password": "***MASKED***",
+      "fullName": "Phòng Tổ chức hành chính",
+      "departmentId": 42,
+      "role": "user",
+      "id": 44
+    },
+    {
+      "username": "khth",
+      "password": "***MASKED***",
+      "fullName": "Kế hoạch tổng hợp",
+      "departmentId": 43,
+      "role": "user",
+      "id": 45
+    },
+    {
+      "username": "tckt",
+      "password": "***MASKED***",
+      "fullName": "Phòng Tài chính kế toán",
+      "departmentId": 45,
+      "role": "user",
+      "id": 46
+    },
+    {
+      "username": "dnhh",
+      "password": "***MASKED***",
+      "fullName": "Khoa Hô Hấp",
+      "departmentId": 46,
+      "role": "user",
+      "id": 47
+    },
+    {
+      "username": "kst1",
+      "password": "***MASKED***",
+      "fullName": "KHOA SẢN THƯỜNG",
+      "departmentId": 47,
+      "role": "user",
+      "id": 48
+    },
+    {
+      "username": "hcc",
+      "password": "***MASKED***",
+      "fullName": "KHOA CẤP CỨU",
+      "departmentId": 48,
+      "role": "user",
+      "id": 49
+    },
+    {
+      "username": "cnkdc",
+      "password": "***MASKED***",
+      "fullName": "Khoa Chống Nhiễm Khuẩn Dã Chiến",
+      "departmentId": 49,
+      "role": "user",
+      "id": 50
+    },
+    {
+      "username": "qlcl",
+      "password": "***MASKED***",
+      "fullName": "Phòng Quản Lý Chất Lượng",
+      "departmentId": 50,
+      "role": "user",
+      "id": 51
+    },
+    {
+      "username": "thhts01",
+      "password": "***MASKED***",
+      "fullName": "Trung tâm Hỗ trợ sinh sản",
+      "departmentId": 51,
+      "role": "user",
+      "id": 52
+    },
+    {
+      "username": "k03.1",
+      "password": "***MASKED***",
+      "fullName": "Đơn Nguyên Tâm Bệnh - Phục Hồi Chức Năng",
+      "departmentId": 52,
+      "role": "user",
+      "id": 53
+    }
+  ]
+}
