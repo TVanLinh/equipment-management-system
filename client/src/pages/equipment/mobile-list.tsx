@@ -163,18 +163,10 @@ export default function MobileEquipmentList() {
                 {getStatusBadge(item.status)}
               </div>
 
-              <div className="text-sm space-y-1">
+              <div className="text-sm">
                 <p>
                   <span className="text-muted-foreground">Phòng ban:</span>{" "}
                   {getDepartmentName(item.departmentId)}
-                </p>
-                <p>
-                  <span className="text-muted-foreground">Loại thiết bị:</span>{" "}
-                  {item.equipmentType}
-                </p>
-                <p>
-                  <span className="text-muted-foreground">Nhà sản xuất:</span>{" "}
-                  {item.manufacturer}
                 </p>
               </div>
             </div>
