@@ -27,6 +27,8 @@ export default function MobileEquipmentList() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [departmentFilter, setDepartmentFilter] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState("20");
 
   const { data: equipment, isLoading: isLoadingEquipment } = useQuery<Equipment[]>({
     queryKey: ["/api/equipment"],
@@ -79,6 +81,13 @@ export default function MobileEquipmentList() {
         return status;
     }
   };
+
+  // Tính toán phân trang
+  const totalItems = filteredEquipment?.length || 0;
+  const totalPages = Math.ceil(totalItems / parseInt(itemsPerPage));
+  const startIndex = (currentPage - 1) * parseInt(itemsPerPage);
+  const endIndex = startIndex + parseInt(itemsPerPage);
+  const currentItems = filteredEquipment?.slice(startIndex, endIndex);
 
   return (
     <div className="p-4 space-y-4">
@@ -148,9 +157,26 @@ export default function MobileEquipmentList() {
         </Sheet>
       </div>
 
+      {/* Chọn số items trên trang */}
+      <div className="flex justify-end">
+        <Select value={itemsPerPage} onValueChange={(value) => {
+          setItemsPerPage(value);
+          setCurrentPage(1); // Reset về trang 1 khi thay đổi số items/trang
+        }}>
+          <SelectTrigger className="w-[100px]">
+            <SelectValue/>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="20">20</SelectItem>
+            <SelectItem value="50">50</SelectItem>
+            <SelectItem value="100">100</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Danh sách thiết bị */}
       <div className="space-y-4">
-        {filteredEquipment?.map((item) => (
+        {currentItems?.map((item) => (
           <Link key={item.id} href={`/equipment/${item.id}`}>
             <div className="border rounded-lg p-4 space-y-2 hover:border-primary transition-colors">
               <div>
@@ -182,6 +208,32 @@ export default function MobileEquipmentList() {
           </div>
         )}
       </div>
+
+      {/* Phân trang */}
+      {totalPages > 1 && (
+        <div className="flex justify-center gap-2 pt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Trước
+          </Button>
+          <div className="flex items-center gap-1 text-sm">
+            <span className="font-medium">{currentPage}</span>
+            <span className="text-muted-foreground">/ {totalPages}</span>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Sau
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
