@@ -65,18 +65,18 @@ export default function MobileEquipmentList() {
     return departments?.find((d) => d.id === id)?.name || "Không xác định";
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusText = (status: string) => {
     switch (status) {
       case "Active":
-        return <Badge className="bg-green-500">Hoạt động</Badge>;
+        return "Hoạt động";
       case "Maintenance":
-        return <Badge className="bg-yellow-500">Đang bảo trì</Badge>;
+        return "Đang bảo trì";
       case "Inactive":
-        return <Badge className="bg-gray-500">Không hoạt động</Badge>;
+        return "Không hoạt động";
       case "PendingMaintenance":
-        return <Badge className="bg-orange-500">Chờ bảo trì</Badge>;
+        return "Chờ bảo trì";
       default:
-        return <Badge>{status}</Badge>;
+        return status;
     }
   };
 
@@ -153,20 +153,23 @@ export default function MobileEquipmentList() {
         {filteredEquipment?.map((item) => (
           <Link key={item.id} href={`/equipment/${item.id}`}>
             <div className="border rounded-lg p-4 space-y-2 hover:border-primary transition-colors">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="font-medium">{item.equipmentName}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {item.equipmentId} - {item.model}
-                  </p>
-                </div>
-                {getStatusBadge(item.status)}
+              <div>
+                <h3 className="font-medium">{item.equipmentName}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {item.equipmentId} - {item.model}
+                </p>
               </div>
 
-              <div className="text-sm">
+              <div className="text-sm space-y-1">
                 <p>
                   <span className="text-muted-foreground">Phòng ban:</span>{" "}
                   {getDepartmentName(item.departmentId)}
+                </p>
+                <p>
+                  <span className="text-muted-foreground">Trạng thái:</span>{" "}
+                  <Badge variant="outline" className="font-normal">
+                    {getStatusText(item.status)}
+                  </Badge>
                 </p>
               </div>
             </div>
