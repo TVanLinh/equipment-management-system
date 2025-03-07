@@ -1,7 +1,22 @@
 import { Department, Equipment, Maintenance, User, InsertDepartment, InsertEquipment, InsertMaintenance, InsertUser } from "@shared/schema";
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { parse } from 'csv-parse/sync';
+
+dotenv.config();
+
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: Number(process.env.DB_PORT),
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
 
 export interface IStorage {
   // Departments
@@ -208,24 +223,180 @@ export class MemStorage implements IStorage {
   }
 }
 
-// MySQL Storage implementation (for future use)
 export class MySQLStorage implements IStorage {
-  // Implementation methods will be added when switching to MySQL
-  async getDepartments(): Promise<Department[]> { throw new Error("Not implemented"); }
-  async getDepartment(id: number): Promise<Department | undefined> { throw new Error("Not implemented"); }
-  async createDepartment(department: InsertDepartment): Promise<Department> { throw new Error("Not implemented"); }
-  async getEquipment(): Promise<Equipment[]> { throw new Error("Not implemented"); }
-  async getEquipmentById(id: number): Promise<Equipment | undefined> { throw new Error("Not implemented"); }
-  async createEquipment(equipment: InsertEquipment): Promise<Equipment> { throw new Error("Not implemented"); }
-  async updateEquipment(id: number, equipment: Partial<InsertEquipment>): Promise<Equipment> { throw new Error("Not implemented"); }
-  async getMaintenance(): Promise<Maintenance[]> { throw new Error("Not implemented"); }
-  async getMaintenanceByEquipment(equipmentId: number): Promise<Maintenance[]> { throw new Error("Not implemented"); }
-  async createMaintenance(maintenance: InsertMaintenance): Promise<Maintenance> { throw new Error("Not implemented"); }
-  async getUsers(): Promise<User[]> { throw new Error("Not implemented"); }
-  async getUserById(id: number): Promise<User | undefined> { throw new Error("Not implemented"); }
-  async getUserByUsername(username: string): Promise<User | undefined> { throw new Error("Not implemented"); }
-  async createUser(user: InsertUser): Promise<User> { throw new Error("Not implemented"); }
-  async updateUser(id: number, updates: Partial<InsertUser>): Promise<User> { throw new Error("Not implemented"); }
+  // Department methods
+  async getDepartments(): Promise<Department[]> {
+    const [rows] = await pool.query('SELECT * FROM departments');
+    return rows as Department[];
+  }
+
+  async getDepartment(id: number): Promise<Department | undefined> {
+    const [rows] = await pool.query('SELECT * FROM departments WHERE id = ?', [id]);
+    const departments = rows as Department[];
+    return departments[0];
+  }
+
+  async createDepartment(department: InsertDepartment): Promise<Department> {
+    const [result] = await pool.query(
+      'INSERT INTO departments (name, code) VALUES (?, ?)',
+      [department.name, department.code]
+    );
+    const id = (result as any).insertId;
+    return { ...department, id };
+  }
+
+  // Equipment methods
+  async getEquipment(): Promise<Equipment[]> {
+    const [rows] = await pool.query('SELECT * FROM equipment');
+    return rows as Equipment[];
+  }
+
+  async getEquipmentById(id: number): Promise<Equipment | undefined> {
+    const [rows] = await pool.query('SELECT * FROM equipment WHERE id = ?', [id]);
+    const equipment = rows as Equipment[];
+    return equipment[0];
+  }
+
+  async createEquipment(equipment: InsertEquipment): Promise<Equipment> {
+    const [result] = await pool.query(
+      `INSERT INTO equipment (
+        equipmentId, equipmentName, equipmentType, model, serialNumber,
+        countryOfOrigin, manufacturer, unitPrice, vat, fundingSource,
+        supplier, status, purchaseDate, warrantyExpiry, departmentId
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        equipment.equipmentId,
+        equipment.equipmentName,
+        equipment.equipmentType,
+        equipment.model,
+        equipment.serialNumber,
+        equipment.countryOfOrigin,
+        equipment.manufacturer,
+        equipment.unitPrice,
+        equipment.vat,
+        equipment.fundingSource,
+        equipment.supplier,
+        equipment.status,
+        equipment.purchaseDate,
+        equipment.warrantyExpiry,
+        equipment.departmentId
+      ]
+    );
+    const id = (result as any).insertId;
+    return { ...equipment, id };
+  }
+
+  async updateEquipment(id: number, updates: Partial<InsertEquipment>): Promise<Equipment> {
+    const setParts = [];
+    const values = [];
+    for (const [key, value] of Object.entries(updates)) {
+      setParts.push(`${key} = ?`);
+      values.push(value);
+    }
+    values.push(id);
+
+    await pool.query(
+      `UPDATE equipment SET ${setParts.join(', ')} WHERE id = ?`,
+      values
+    );
+
+    const [rows] = await pool.query('SELECT * FROM equipment WHERE id = ?', [id]);
+    const equipment = rows as Equipment[];
+    if (!equipment[0]) throw new Error("Equipment not found");
+    return equipment[0];
+  }
+
+  // Maintenance methods
+  async getMaintenance(): Promise<Maintenance[]> {
+    const [rows] = await pool.query('SELECT * FROM maintenance');
+    return rows as Maintenance[];
+  }
+
+  async getMaintenanceByEquipment(equipmentId: number): Promise<Maintenance[]> {
+    const [rows] = await pool.query(
+      'SELECT * FROM maintenance WHERE equipmentId = ?',
+      [equipmentId]
+    );
+    return rows as Maintenance[];
+  }
+
+  async createMaintenance(maintenance: InsertMaintenance): Promise<Maintenance> {
+    const [result] = await pool.query(
+      `INSERT INTO maintenance (
+        equipmentId, startDate, endDate, maintenanceType,
+        status, performedBy, notes
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        maintenance.equipmentId,
+        maintenance.startDate,
+        maintenance.endDate,
+        maintenance.maintenanceType,
+        maintenance.status,
+        maintenance.performedBy,
+        maintenance.notes
+      ]
+    );
+    const id = (result as any).insertId;
+    return { ...maintenance, id };
+  }
+
+  // User methods
+  async getUsers(): Promise<User[]> {
+    const [rows] = await pool.query('SELECT * FROM users');
+    return rows as User[];
+  }
+
+  async getUserById(id: number): Promise<User | undefined> {
+    const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [id]);
+    const users = rows as User[];
+    return users[0];
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [rows] = await pool.query(
+      'SELECT * FROM users WHERE username = ?',
+      [username]
+    );
+    const users = rows as User[];
+    return users[0];
+  }
+
+  async createUser(user: InsertUser): Promise<User> {
+    const [result] = await pool.query(
+      `INSERT INTO users (
+        username, password, fullName, role, departmentId
+      ) VALUES (?, ?, ?, ?, ?)`,
+      [
+        user.username,
+        user.password,
+        user.fullName,
+        user.role,
+        user.departmentId
+      ]
+    );
+    const id = (result as any).insertId;
+    return { ...user, id };
+  }
+
+  async updateUser(id: number, updates: Partial<InsertUser>): Promise<User> {
+    const setParts = [];
+    const values = [];
+    for (const [key, value] of Object.entries(updates)) {
+      setParts.push(`${key} = ?`);
+      values.push(value);
+    }
+    values.push(id);
+
+    await pool.query(
+      `UPDATE users SET ${setParts.join(', ')} WHERE id = ?`,
+      values
+    );
+
+    const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [id]);
+    const users = rows as User[];
+    if (!users[0]) throw new Error("User not found");
+    return users[0];
+  }
 }
 
-export const storage = new MemStorage();
+export const storage = new MySQLStorage();
