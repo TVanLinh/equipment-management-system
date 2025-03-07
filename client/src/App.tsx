@@ -1,10 +1,11 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import Sidebar from "@/components/layout/sidebar";
 import NotFound from "@/pages/not-found";
 import EquipmentList from "@/pages/equipment/list";
+import MobileEquipmentList from "@/pages/equipment/mobile-list";
 import EquipmentDetails from "@/pages/equipment/details";
 import EditEquipment from "@/pages/equipment/edit";
 import AddEquipment from "@/pages/equipment/add";
@@ -12,10 +13,9 @@ import DepartmentList from "@/pages/departments/list";
 import MaintenanceList from "@/pages/maintenance/list";
 import Login from "@/pages/auth/login";
 import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "wouter";
-import { useEffect } from "react";
 import UserList from "@/pages/users/list";
 import AddUser from "@/pages/users/add";
+import { useEffect, useState } from "react";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [, navigate] = useLocation();
@@ -42,6 +42,20 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function Router() {
+  const [, navigate] = useLocation();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <Switch>
       <Route path="/login" component={Login} />
@@ -49,10 +63,10 @@ function Router() {
       <Route>
         <ProtectedRoute>
           <div className="min-h-screen bg-background flex">
-            <Sidebar />
-            <main className="flex-1 p-8 ml-64">
+            {!isMobile && <Sidebar />}
+            <main className={`flex-1 p-4 ${!isMobile ? 'ml-64' : ''}`}>
               <Switch>
-                <Route path="/" component={EquipmentList} />
+                <Route path="/" component={isMobile ? MobileEquipmentList : EquipmentList} />
                 <Route path="/equipment/add" component={AddEquipment} />
                 <Route path="/equipment/:id" component={EquipmentDetails} />
                 <Route path="/equipment/:id/edit" component={EditEquipment} />
